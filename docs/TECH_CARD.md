@@ -69,7 +69,7 @@
 
 ## 8. Արտաքին API
 
-Bearer `API_TOKEN` — `middleware` և արտաքին route-ներ (տե՛ս `docs/04-API.md`)։
+Bearer `API_TOKEN` — `proxy.ts` և արտաքին route-ներ (տե՛ս `docs/04-API.md`)։
 
 ---
 
