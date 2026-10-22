@@ -4,7 +4,7 @@
 
 | Շերտ | Տեխնոլոգիա | Տարբերակ (ըստ package.json) |
 |------|------------|------------------------------|
-| Runtime | Node.js | 18+ (պահանջ) |
+| Runtime | Node.js | 22+ (pnpm 11) |
 | Framework | Next.js (App Router) | ^16.1.6 |
 | UI | React | ^18.3.1 |
 | Styling | Tailwind CSS | ^3.4.4 |
@@ -14,6 +14,6 @@
 | Validation | Zod | ^3.23.8 |
 | Storage | Cloudflare R2 (@aws-sdk/client-s3) | ^3.985.0 |
 | Charts | Recharts | ^3.6.0 |
-| Unit tests | Vitest | ^4.x (`npm run test`) |
+| Unit tests | Vitest | ^4.x (`pnpm run test`) |
 
-**Package manager (կանոնական այս repo-ում).** **npm** — `package-lock.json`։ Տեղադրում. `npm install`։ Այլ գործիքներ (pnpm) չեն օգտագործվում — տե՛ս `DECISIONS.md`։
+**Package manager (կանոնական այս repo-ում).** **pnpm** — `pnpm-lock.yaml`։ Տեղադրում. `pnpm install`։ Dev սերվեր. `pnpm run dev`։

@@ -61,9 +61,9 @@
 3. **Настройте проект**
    - **Framework Preset:** Next.js (определится автоматически)
    - **Root Directory:** `./` (оставьте по умолчанию)
-   - **Build Command:** `npm run build` (автоматически)
+   - **Build Command:** `pnpm run build` (автоматически, если есть `pnpm-lock.yaml`)
    - **Output Directory:** `.next` (автоматически)
-   - **Install Command:** `npm install` (автоматически)
+   - **Install Command:** `pnpm install` (автоматически, если есть `pnpm-lock.yaml`)
 
 ### Шаг 3: Настройка переменных окружения
 
