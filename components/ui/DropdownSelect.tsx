@@ -170,7 +170,7 @@ function SelectMenu({
       id={id}
       role="listbox"
       style={{ top: box.top, left: box.left, width: box.width }}
-      className={`dropdown-scroll fixed z-[260] max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-[0_16px_40px_rgba(15,23,42,0.14)] ${lift}`}
+      className={`dropdown-scroll fixed z-[260] max-h-64 overflow-auto rounded-xl border border-blue-100 bg-white p-1.5 shadow-card ${lift}`}
     >
       {options.map((option) => (
         <SelectOption
@@ -195,7 +195,7 @@ function SelectOption({
   onSelect: (value: string) => void;
 }) {
   const row = selected
-    ? 'bg-gray-100 font-medium text-gray-950'
+    ? 'bg-blue-50 font-medium text-blue-900'
     : 'text-gray-700 hover:bg-gray-50';
 
   return (

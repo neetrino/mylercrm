@@ -12,7 +12,10 @@ export default async function BuildingsPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Buildings Management</h1>
+        <div>
+          <p className="page-kicker">Catalog</p>
+          <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">Buildings</h1>
+        </div>
       </div>
       <BuildingsList />
     </div>

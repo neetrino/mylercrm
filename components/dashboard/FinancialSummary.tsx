@@ -85,7 +85,7 @@ export default function FinancialSummary() {
       <h2 className="mb-6 text-xl font-semibold text-gray-900">Financial Summary</h2>
       
       {/* Total Portfolio Overview */}
-      <div className="mb-6 rounded-xl border-2 border-gray-300 bg-gradient-to-r from-gray-50 to-gray-100 p-6">
+      <div className="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-yellow-50 p-6">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <h3 className="text-lg font-bold text-gray-900">Total Portfolio Value</h3>
           <p className="text-2xl font-bold text-gray-900 sm:text-3xl">{formatAmd(totalPortfolio)}</p>
@@ -249,9 +249,9 @@ export default function FinancialSummary() {
           </h3>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-lg border-2 border-gray-300 bg-white p-5 shadow-sm">
+          <div className="rounded-lg border-2 border-blue-200 bg-white p-5 shadow-sm">
             <div className="mb-2 flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-gray-400"></div>
+              <div className="h-2 w-2 rounded-full bg-blue-300"></div>
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Upcoming</p>
             </div>
             <p className="text-2xl font-bold text-gray-900">
