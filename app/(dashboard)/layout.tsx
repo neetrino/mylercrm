@@ -24,6 +24,7 @@ export default async function DashboardLayout({
         ]
       : []),
     { href: '/dashboard', label: 'Analytics', iconName: 'LayoutDashboard' },
+    { href: '/settings', label: 'Settings', iconName: 'Settings' },
   ];
 
   return (

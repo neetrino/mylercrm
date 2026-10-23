@@ -8,6 +8,7 @@ import {
   MapPin,
   Building2,
   Users,
+  Settings,
 } from 'lucide-react';
 
 export type SidebarNavItem = {
@@ -27,6 +28,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   MapPin,
   Building2,
   Users,
+  Settings,
 };
 
 export default function SidebarNav({ navItems, onNavigate }: SidebarNavProps) {
@@ -42,8 +44,9 @@ export default function SidebarNav({ navItems, onNavigate }: SidebarNavProps) {
           (item.href !== '/dashboard' && pathname.startsWith(item.href));
 
         return (
+          <div key={item.href}>
+          {item.iconName === 'Settings' ? <div className="mx-2 my-3 border-t border-white/10" /> : null}
           <Link
-            key={item.href}
             href={item.href}
             onClick={onNavigate}
             className={`group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
@@ -62,6 +65,7 @@ export default function SidebarNav({ navItems, onNavigate }: SidebarNavProps) {
             />
             <span>{item.label}</span>
           </Link>
+          </div>
         );
       })}
     </nav>

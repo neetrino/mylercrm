@@ -157,6 +157,18 @@ export const updateUserSchema = z.object({
   status: userStatusSchema.optional(),
 });
 
+const optionalPassword = z
+  .union([z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH), z.literal('')])
+  .optional()
+  .transform((value) => (value ? value : undefined));
+
+/** Self-service login (email) and password change. Current password is always required. */
+export const updateAccountSchema = z.object({
+  email: z.string().email().max(EMAIL_MAX_LENGTH),
+  currentPassword: z.string().min(1).max(PASSWORD_MAX_LENGTH),
+  newPassword: optionalPassword,
+});
+
 export const externalAuthSchema = z.object({
   email: z.string().email().max(EMAIL_MAX_LENGTH),
   password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
