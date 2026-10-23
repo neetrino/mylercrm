@@ -207,6 +207,7 @@ export default function ApartmentsList() {
           getStatusColor={getStatusColor}
           setPreviewModalUrl={setPreviewModalUrl}
           currentUserId={currentUserId}
+          onDetailsClose={() => { void fetchApartments(currentPage, true); }}
         />
       ) : viewMode === 'grid' ? (
         /* Cards Grid View */
@@ -219,6 +220,7 @@ export default function ApartmentsList() {
               getStatusColor={getStatusColor}
               onOpenPreview={setPreviewModalUrl}
               currentUserId={currentUserId}
+              onDetailsClose={() => { void fetchApartments(currentPage, true); }}
             />
           ))}
         </div>

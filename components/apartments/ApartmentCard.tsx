@@ -18,9 +18,10 @@ interface ApartmentCardProps {
   apartmentId: number;
   currentUserId: string;
   currentUserEmail: string;
+  embedded?: boolean;
 }
 
-export default function ApartmentCard({ apartmentId, currentUserId, currentUserEmail }: ApartmentCardProps) {
+export default function ApartmentCard({ apartmentId, currentUserId, currentUserEmail, embedded = false }: ApartmentCardProps) {
   const router = useRouter();
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -205,9 +206,11 @@ export default function ApartmentCard({ apartmentId, currentUserId, currentUserE
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4">
         <p className="text-sm text-red-800">{error || 'Apartment not found'}</p>
-        <Link href="/apartments" className="mt-2 text-sm text-blue-600 hover:underline">
-          ← Back to list
-        </Link>
+        {embedded ? null : (
+          <Link href="/apartments" className="mt-2 text-sm text-blue-600 hover:underline">
+            ← Back to list
+          </Link>
+        )}
       </div>
     );
   }
@@ -233,6 +236,7 @@ export default function ApartmentCard({ apartmentId, currentUserId, currentUserE
             ?? null
         }
         statusLocked={Boolean(blockedBy) || (!holding && isLockedByOther(activeReview(apartment.in_review), currentUserId))}
+        embedded={embedded}
       />
 
       {/* Tab Content */}

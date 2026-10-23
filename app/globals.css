@@ -38,6 +38,15 @@
   top: -6vh;
 }
 
+@keyframes sheet-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sheet-panel {
+  animation: sheet-fade 180ms ease-out;
+}
+
 :root {
   --brand-teal: #2aa6af;
   --brand-sun: #fed14b;

@@ -20,20 +20,22 @@ type ApartmentCardChromeProps = {
   handleStatusChange: (status: string) => void;
   reviewEmail: string | null;
   statusLocked: boolean;
+  embedded?: boolean;
 };
 
 export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
-  const { apartment, editing, setFormData, handleCopyLandingLink, landingCopied, activeTab, setActiveTab, setEditing, handleSave, handleStatusChange, reviewEmail, statusLocked } = props;
+  const { apartment, editing, setFormData, handleCopyLandingLink, landingCopied, activeTab, setActiveTab, setEditing, handleSave, handleStatusChange, reviewEmail, statusLocked, embedded } = props;
   return (
     <>
       <div className="mb-6">
-        <Link
-          href="/apartments"
-          className="mb-4 inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
-        >
-          ← Back to list
-        </Link>
-        
+        {embedded ? null : (
+          <Link
+            href="/apartments"
+            className="mb-4 inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+          >
+            ← Back to list
+          </Link>
+        )}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <h1 className="break-words text-2xl font-bold text-gray-900 sm:text-3xl">
