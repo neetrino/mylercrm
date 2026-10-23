@@ -37,7 +37,7 @@ export function getEmbedPreviewUrl(url: string): string {
   try {
     const parsed = tryParseUrl(url);
     if (!parsed || !isHttpsOrHttp(parsed)) {
-      return url.trim();
+      return '';
     }
 
     const hrefForMatch = `${parsed.pathname}${parsed.search}`;
@@ -65,20 +65,29 @@ export function getEmbedPreviewUrl(url: string): string {
       return parsed.href;
     }
 
-    return url.trim();
+    return parsed.href;
   } catch {
-    return url;
+    return '';
   }
+}
+
+/** http(s) URL safe to put in href or iframe src. Empty when the value is not http(s). */
+export function safeHttpUrl(url: string): string {
+  const parsed = tryParseUrl(url);
+  if (!parsed || !isHttpsOrHttp(parsed)) {
+    return '';
+  }
+  return parsed.href;
 }
 
 /** Prefer embed URL for known 3D hosts; otherwise return original URL for iframe src. */
 export function getIframeSrc(url: string): string {
   const parsed = tryParseUrl(url);
   if (!parsed || !isHttpsOrHttp(parsed)) {
-    return url.trim();
+    return '';
   }
   if (isMatterportHost(parsed.hostname) || isSketchfabHost(parsed.hostname)) {
     return getEmbedPreviewUrl(url);
   }
-  return url.trim();
+  return parsed.href;
 }

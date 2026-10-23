@@ -4,16 +4,16 @@ CRM для управления комплексом недвижимости: �
 
 ## Быстрый старт
 
-**Требования:** Node.js 18+, PostgreSQL (Neon) или совместимый URL.
+**Требования:** Node.js 22+, PostgreSQL (Neon) или совместимый URL.
 
 ```bash
 git clone <repository-url>
 cd maylercrm
-npm install
+pnpm install
 cp .env.example .env
 # Заполните DATABASE_URL, NEXTAUTH_SECRET, API_TOKEN и при необходимости R2
-npx prisma migrate dev
-npm run dev
+pnpm exec prisma migrate dev
+pnpm run dev
 ```
 
 Откройте [http://localhost:3000](http://localhost:3000).
@@ -42,10 +42,10 @@ Next.js (App Router), React, TypeScript, Tailwind CSS, Prisma, PostgreSQL, NextA
 ## Скрипты
 
 ```bash
-npm run dev          # Dev-сервер
-npm run build        # Production-сборка
-npm run lint         # ESLint
-npm run db:studio    # Prisma Studio
+pnpm run dev          # Dev-сервер
+pnpm run build        # Production-сборка
+pnpm run lint         # ESLint
+pnpm run db:studio    # Prisma Studio
 ```
 
 ## Роли

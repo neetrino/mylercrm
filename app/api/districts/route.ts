@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { districtService } from '@/services/district.service';
 import { createDistrictSchema } from '@/lib/validations';
 import { getCachedData, cacheKeys, invalidateCache } from '@/lib/cache';
@@ -8,14 +9,11 @@ import { z } from 'zod';
 
 export async function GET(request: NextRequest) {
   try {
-    // Проверка для внешнего API (Bearer Token) или внутреннего (Session)
+    const bearerOk = isAuthorizedBearer(request);
     const authHeader = request.headers.get('authorization');
-    const apiToken = process.env.API_TOKEN;
 
-    if (authHeader && apiToken) {
-      // Внешний API через Bearer Token - НЕ используем кеш, всегда свежие данные!
-      const token = authHeader.replace('Bearer ', '');
-      if (token !== apiToken) {
+    if (authHeader) {
+      if (!bearerOk) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       

@@ -13,8 +13,8 @@
 |----------|---------|
 | Չափ | **B** — բազմաթիվ ֆիչեր (CRM, dashboard, արտաքին API) |
 | Ճարտարապետություն | Փաստացի. պարզ (app/, components/, lib/) · Նպատակային. feature-based |
-| Package manager | npm (pnpm-ին անցումը՝ քննարկելի) |
-| Node.js | 18+ |
+| Package manager | pnpm (`pnpm-lock.yaml`) |
+| Node.js | 22+ |
 | TypeScript | 5.x, strict |
 | Git | feature branches, Conventional Commits (commitlint) |
 
@@ -69,7 +69,7 @@
 
 ## 8. Արտաքին API
 
-Bearer `API_TOKEN` — `middleware` և արտաքին route-ներ (տե՛ս `docs/04-API.md`)։
+Bearer `API_TOKEN` — `proxy.ts` և արտաքին route-ներ (տե՛ս `docs/04-API.md`)։
 
 ---
 

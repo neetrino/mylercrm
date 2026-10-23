@@ -23,6 +23,30 @@ if (!API_TOKEN) {
   process.exit(1);
 }
 
+type ApiRecord = {
+  error?: string;
+  id?: string | number;
+  items?: ApiRecord[];
+  data?: ApiRecord[] | ApiRecord;
+  districts?: ApiRecord[];
+  meta?: {
+    total_districts?: number;
+    total_buildings?: number;
+    total_apartments?: number;
+  };
+};
+
+type ApiPayload = ApiRecord | ApiRecord[];
+
+function isApiRecord(value: unknown): value is ApiRecord {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function asApiList(value: unknown): ApiRecord[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(isApiRecord);
+}
+
 interface TestResult {
   name: string;
   endpoint: string;
@@ -30,7 +54,7 @@ interface TestResult {
   status: number;
   success: boolean;
   error?: string;
-  data?: any;
+  data?: ApiPayload;
 }
 
 const results: TestResult[] = [];
@@ -39,7 +63,7 @@ async function testEndpoint(
   name: string,
   endpoint: string,
   method: string = 'GET',
-  body?: any
+  body?: unknown
 ): Promise<TestResult> {
   const url = `${API_BASE_URL}${endpoint}`;
   
@@ -60,7 +84,9 @@ async function testEndpoint(
     }
 
     const response = await fetch(url, options);
-    const data = await response.json().catch(() => ({}));
+    const raw: unknown = await response.json().catch(() => ({}));
+    const record = isApiRecord(raw) ? raw : undefined;
+    const list = Array.isArray(raw) ? asApiList(raw) : undefined;
 
     const result: TestResult = {
       name,
@@ -68,18 +94,18 @@ async function testEndpoint(
       method,
       status: response.status,
       success: response.ok,
-      data: response.ok ? data : undefined,
-      error: response.ok ? undefined : data.error || `HTTP ${response.status}`,
+      data: response.ok ? list ?? record : undefined,
+      error: response.ok ? undefined : record?.error || `HTTP ${response.status}`,
     };
 
     if (result.success) {
       console.log(`   ✅ Успешно (${response.status})`);
-      if (Array.isArray(data)) {
-        console.log(`   📊 Получено записей: ${data.length}`);
-      } else if (data.items && Array.isArray(data.items)) {
-        console.log(`   📊 Получено записей: ${data.items.length}`);
-      } else if (data.id) {
-        console.log(`   📊 ID: ${data.id}`);
+      if (list) {
+        console.log(`   📊 Получено записей: ${list.length}`);
+      } else if (record?.items && Array.isArray(record.items)) {
+        console.log(`   📊 Получено записей: ${record.items.length}`);
+      } else if (record?.id) {
+        console.log(`   📊 ID: ${record.id}`);
       }
     } else {
       console.log(`   ❌ Ошибка (${response.status}): ${result.error}`);
@@ -113,9 +139,10 @@ async function runTests() {
       '/api/external/full'
     )
   );
-  if (results[0].success && results[0].data?.meta) {
-    const m = results[0].data.meta;
-    console.log(`   📊 Districts: ${m.total_districts}, Buildings: ${m.total_buildings}, Apartments: ${m.total_apartments}`);
+  const fullPayload = results[0].data;
+  const meta = isApiRecord(fullPayload) ? fullPayload.meta : undefined;
+  if (results[0].success && meta) {
+    console.log(`   📊 Districts: ${meta.total_districts}, Buildings: ${meta.total_buildings}, Apartments: ${meta.total_apartments}`);
   }
   await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -131,9 +158,12 @@ async function runTests() {
   await new Promise(resolve => setTimeout(resolve, 500));
 
   // Тест 2: Получить здания по District ID (ID из full или districts)
-  const fullData = results[0].data;
-  const districts = fullData?.districts || results[1]?.data?.data || results[1]?.data;
-  const districtsList = Array.isArray(districts) ? districts : [];
+  const fullData = isApiRecord(results[0].data) ? results[0].data : undefined;
+  const districtsPayload = results[1]?.data;
+  const districtsFromSecond = Array.isArray(districtsPayload)
+    ? districtsPayload
+    : isApiRecord(districtsPayload) ? districtsPayload.data : undefined;
+  const districtsList = asApiList(fullData?.districts ?? districtsFromSecond);
   if (districtsList.length > 0) {
     const districtId = districtsList[0].id;
     results.push(
@@ -147,8 +177,9 @@ async function runTests() {
 
     // Тест 3: Получить квартиры по Building ID (нужен реальный ID из второго теста)
     const buildingsResp = results[2].data;
-    const buildings = buildingsResp?.data || (Array.isArray(buildingsResp) ? buildingsResp : []);
-    if (Array.isArray(buildings) && buildings.length > 0) {
+    const buildingsSource = isApiRecord(buildingsResp) ? buildingsResp.data ?? buildingsResp : buildingsResp;
+    const buildings = asApiList(buildingsSource);
+    if (buildings.length > 0) {
       const buildingId = buildings[0].id;
       results.push(
         await testEndpoint(
@@ -161,8 +192,8 @@ async function runTests() {
 
       // Тест 4: Получить детали квартиры (нужен реальный ID из третьего теста)
       const apartmentsResp = results[3].data;
-      const apartments = apartmentsResp?.items || apartmentsResp;
-      const apartmentsList = Array.isArray(apartments) ? apartments : [];
+      const apartmentsSource = isApiRecord(apartmentsResp) ? apartmentsResp.items : apartmentsResp;
+      const apartmentsList = asApiList(apartmentsSource);
       if (apartmentsList.length > 0) {
         const apartmentId = apartmentsList[0].id;
         results.push(

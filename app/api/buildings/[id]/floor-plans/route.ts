@@ -4,6 +4,7 @@ import { buildingService } from '@/services/building.service';
 import { putObject } from '@/lib/r2';
 import { invalidateCache, cacheKeys } from '@/lib/cache';
 import { handleRouteError } from '@/lib/apiErrorResponse';
+import { bufferMatchesMime, extensionForMime } from '@/lib/fileSignature';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
@@ -53,10 +54,13 @@ export async function POST(
       );
     }
 
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-    const key = `buildings/${buildingId}/floor-${floor}.${ext}`;
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+    if (!bufferMatchesMime(buffer, file.type)) {
+      return NextResponse.json({ error: 'File content does not match its type' }, { status: 400 });
+    }
+    const ext = extensionForMime(file.type) ?? 'bin';
+    const key = `buildings/${buildingId}/floor-${floor}.${ext}`;
     const { url: fileUrl } = await putObject(key, buffer, file.type);
 
     await buildingService.createFloorPlan(buildingId, floor, fileUrl, file.name);

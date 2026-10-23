@@ -20,5 +20,11 @@ export default async function ApartmentPage({
     redirect('/apartments');
   }
 
-  return <ApartmentCard apartmentId={id} />;
+  return (
+    <ApartmentCard
+      apartmentId={id}
+      currentUserId={session.user.id}
+      currentUserEmail={session.user.email}
+    />
+  );
 }

@@ -24,4 +24,8 @@ export type ApartmentListRow = {
   matter_link?: string | null;
   matterLink?: string | null;
   landingToken?: string | null;
+  in_review?: { userId: string; email: string; expiresAt: string } | null;
 };
+
+export type ApartmentEdit = { apartmentNo?: string; apartmentName?: string | null };
+export type EditedFields = Record<number, ApartmentEdit>;

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { apartmentService } from '@/services/apartment.service';
+import { apartmentHasPayments } from '@/services/apartmentPayments';
+import { assertStatusChangeAllowed } from '@/services/apartmentReview';
 import { updateApartmentStatusSchema } from '@/lib/validations';
 import { invalidateCache, cacheKeys, cacheTags } from '@/lib/cache';
 import { handleRouteError, jsonError } from '@/lib/apiErrorResponse';
@@ -13,22 +16,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Проверка сессии для внутреннего использования
     const session = await auth();
-    
-    // Если нет сессии, проверяем Bearer Token для внешнего API
-    if (!session) {
-      const authHeader = request.headers.get('authorization');
-      const apiToken = process.env.API_TOKEN;
-
-      if (!authHeader || !apiToken) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-
-      const token = authHeader.replace('Bearer ', '');
-      if (token !== apiToken) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+    if (!session && !isAuthorizedBearer(request)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id: idParam } = await params;
@@ -99,6 +89,13 @@ export async function PUT(
     }
 
     const validatedData = updateApartmentStatusSchema.parse(merged);
+    const lock = await assertStatusChangeAllowed(id, session?.user?.id ?? null);
+    if (!lock.allowed) {
+      return NextResponse.json(
+        { error: `Apartment is in review by ${lock.email}`, reviewer: lock.email },
+        { status: 409 },
+      );
+    }
 
     // Преобразование данных для обновления
     const updateData: Prisma.ApartmentUpdateInput = {
@@ -129,7 +126,7 @@ export async function PUT(
     if (validatedData.price_sqm !== undefined) {
       updateData.priceSqm = validatedData.price_sqm;
     }
-    if (validatedData.total_paid !== undefined) {
+    if (validatedData.total_paid !== undefined && !(await apartmentHasPayments(id))) {
       updateData.totalPaid = validatedData.total_paid;
     }
     if (validatedData.buyer_address !== undefined) {

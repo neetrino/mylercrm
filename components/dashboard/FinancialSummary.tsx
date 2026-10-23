@@ -8,10 +8,10 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
-  LabelList,
 } from 'recharts';
 import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 import { formatAmd } from '@/lib/formatAmd';
+import { BRAND } from '@/lib/brandColors';
 
 type FinancialData = {
   sold: {
@@ -72,10 +72,10 @@ export default function FinancialSummary() {
 
   // Данные для круговой диаграммы
   const pieData = [
-    { name: 'Sold', value: totalSold, color: '#3b82f6' },
-    { name: 'Available', value: data.notSold.available, color: '#10b981' },
-    { name: 'Reserved', value: data.notSold.reserved, color: '#f59e0b' },
-    { name: 'Upcoming', value: data.notSold.upcoming, color: '#9ca3af' },
+    { name: 'Sold', value: totalSold, color: BRAND.teal },
+    { name: 'Available', value: data.notSold.available, color: BRAND.pineBright },
+    { name: 'Reserved', value: data.notSold.reserved, color: BRAND.sun },
+    { name: 'Upcoming', value: data.notSold.upcoming, color: BRAND.ice },
   ].filter(item => item.value > 0);
 
   const COLORS = pieData.map(item => item.color);
@@ -85,10 +85,10 @@ export default function FinancialSummary() {
       <h2 className="mb-6 text-xl font-semibold text-gray-900">Financial Summary</h2>
       
       {/* Total Portfolio Overview */}
-      <div className="mb-6 rounded-xl border-2 border-gray-300 bg-gradient-to-r from-gray-50 to-gray-100 p-6">
-        <div className="mb-4 flex items-center justify-between">
+      <div className="mb-6 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-yellow-50 p-6">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <h3 className="text-lg font-bold text-gray-900">Total Portfolio Value</h3>
-          <p className="text-3xl font-bold text-gray-900">{formatAmd(totalPortfolio)}</p>
+          <p className="text-2xl font-bold text-gray-900 sm:text-3xl">{formatAmd(totalPortfolio)}</p>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="rounded-lg bg-white p-4 shadow-sm">
@@ -131,7 +131,7 @@ export default function FinancialSummary() {
               </p>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-lg bg-white/60 p-4">
                 <p className="mb-1 text-xs font-medium text-blue-700">Paid</p>
                 <p className="text-2xl font-bold text-blue-900">
@@ -193,7 +193,7 @@ export default function FinancialSummary() {
                   cy="45%"
                   labelLine={false}
                   outerRadius={90}
-                  fill="#8884d8"
+                  fill={BRAND.teal}
                   dataKey="value"
                   label={(props: { percent?: number }) => {
                     const { percent } = props;
@@ -210,8 +210,8 @@ export default function FinancialSummary() {
                 <Tooltip 
                   formatter={(value: number | undefined) => value ? formatAmd(value) : ''}
                   contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
+                    backgroundColor: BRAND.surface,
+                    border: `1px solid ${BRAND.grid}`,
                     borderRadius: '0.5rem',
                   }}
                 />
@@ -249,9 +249,9 @@ export default function FinancialSummary() {
           </h3>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-lg border-2 border-gray-300 bg-white p-5 shadow-sm">
+          <div className="rounded-lg border-2 border-blue-200 bg-white p-5 shadow-sm">
             <div className="mb-2 flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-gray-400"></div>
+              <div className="h-2 w-2 rounded-full bg-blue-300"></div>
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Upcoming</p>
             </div>
             <p className="text-2xl font-bold text-gray-900">

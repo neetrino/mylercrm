@@ -131,3 +131,54 @@ export const updateApartmentStatusSchema = z.object({
   deal_description: z.string().max(2000).optional().nullable().or(z.literal('').transform(() => null)),
   apartment_name: z.string().max(255).optional().nullable().or(z.literal('').transform(() => null)),
 });
+
+const userRoleSchema = z.enum(['ADMIN', 'SALES']);
+const userStatusSchema = z.enum(['ACTIVE', 'DISABLED']);
+const PASSWORD_MIN_LENGTH = 8;
+const PASSWORD_MAX_LENGTH = 128;
+const EMAIL_MAX_LENGTH = 320;
+const PAYMENT_METHOD_MAX_LENGTH = 100;
+const PAYMENT_NOTE_MAX_LENGTH = 1000;
+const PAYMENT_AMOUNT_MAX = 9_999_999_999.99;
+
+export const createUserSchema = z.object({
+  email: z.string().email().max(EMAIL_MAX_LENGTH),
+  password: z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
+  role: userRoleSchema,
+});
+
+export const updateUserSchema = z.object({
+  email: z.string().email().max(EMAIL_MAX_LENGTH).optional(),
+  password: z
+    .union([z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH), z.literal('')])
+    .optional()
+    .transform((value) => (value ? value : undefined)),
+  role: userRoleSchema.optional(),
+  status: userStatusSchema.optional(),
+});
+
+const optionalPassword = z
+  .union([z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH), z.literal('')])
+  .optional()
+  .transform((value) => (value ? value : undefined));
+
+/** Self-service login (email) and password change. Current password is always required. */
+export const updateAccountSchema = z.object({
+  email: z.string().email().max(EMAIL_MAX_LENGTH),
+  currentPassword: z.string().min(1).max(PASSWORD_MAX_LENGTH),
+  newPassword: optionalPassword,
+});
+
+export const externalAuthSchema = z.object({
+  email: z.string().email().max(EMAIL_MAX_LENGTH),
+  password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
+});
+
+const emptyToNull = z.literal('').transform(() => null);
+
+export const createPaymentSchema = z.object({
+  amount: z.number().positive().max(PAYMENT_AMOUNT_MAX),
+  paidAt: z.string().date(),
+  method: z.string().max(PAYMENT_METHOD_MAX_LENGTH).optional().nullable().or(emptyToNull),
+  note: z.string().max(PAYMENT_NOTE_MAX_LENGTH).optional().nullable().or(emptyToNull),
+});

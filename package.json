@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Real Estate CRM система для управления комплексом недвижимости",
   "private": true,
+  "packageManager": "pnpm@11.13.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",

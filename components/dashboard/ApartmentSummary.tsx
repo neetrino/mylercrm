@@ -47,8 +47,8 @@ export default function ApartmentSummary() {
   }
 
   const stats = [
-    { label: 'Total', count: data.total.count, sqm: data.total.sqm, color: 'bg-gray-100 text-gray-700' },
-    { label: 'Upcoming', count: data.upcoming.count, sqm: data.upcoming.sqm, color: 'bg-gray-50 text-gray-600' },
+    { label: 'Total', count: data.total.count, sqm: data.total.sqm, color: 'bg-blue-950 text-white' },
+    { label: 'Upcoming', count: data.upcoming.count, sqm: data.upcoming.sqm, color: 'bg-blue-50 text-blue-800' },
     { label: 'Available', count: data.available.count, sqm: data.available.sqm, color: 'bg-green-50 text-green-700' },
     { label: 'Reserved', count: data.reserved.count, sqm: data.reserved.sqm, color: 'bg-yellow-50 text-yellow-700' },
     { label: 'Sold', count: data.sold.count, sqm: data.sold.sqm, color: 'bg-blue-50 text-blue-700' },

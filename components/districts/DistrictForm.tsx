@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { District } from '@prisma/client';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 interface DistrictFormProps {
   district: District | null;
@@ -18,6 +19,7 @@ export default function DistrictForm({
   const [slug, setSlug] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  useCloseOnEscape(onClose);
 
   useEffect(() => {
     if (district) {
@@ -73,8 +75,8 @@ export default function DistrictForm({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="card w-full max-w-md p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-950/50 p-4">
+      <div className="card max-h-[92dvh] w-full max-w-md overflow-y-auto p-6">
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
             {district ? 'Edit District' : 'Create District'}

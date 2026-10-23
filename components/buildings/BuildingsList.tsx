@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Building, District } from '@prisma/client';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 
 type BuildingWithDistrict = Building & {
   district: District;
@@ -85,39 +86,35 @@ export default function BuildingsList() {
         </div>
       )}
 
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="text-sm font-medium text-gray-700">
             Filter by District:
           </label>
-          <select
-            value={selectedDistrict || ''}
-            onChange={(e) =>
-              setSelectedDistrict(
-                e.target.value ? parseInt(e.target.value) : null
-              )
-            }
-            className="rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="">All Districts</option>
-            {districts.map((district) => (
-              <option key={district.id} value={district.id}>
-                {district.name}
-              </option>
-            ))}
-          </select>
+          <div className="w-full sm:w-56">
+            <DropdownSelect
+              value={selectedDistrict ? String(selectedDistrict) : ''}
+              onChange={(next) => setSelectedDistrict(next ? Number(next) : null)}
+              options={[
+                { value: '', label: 'All Districts' },
+                ...districts.map((district) => ({ value: String(district.id), label: district.name })),
+              ]}
+              placeholder="All Districts"
+              ariaLabel="Filter by district"
+            />
+          </div>
         </div>
         <Link
           href="/admin/buildings/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="btn-primary w-full text-center sm:w-auto"
         >
           + Create Building
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+      <div className="card overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-blue-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 ID

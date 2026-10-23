@@ -1,0 +1,12 @@
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+import { UsersList } from '@/components/users/UsersList';
+
+export default async function UsersPage() {
+  const session = await auth();
+  if (!session || session.user.role !== 'ADMIN') {
+    redirect('/apartments');
+  }
+
+  return <UsersList currentUserId={session.user.id} />;
+}

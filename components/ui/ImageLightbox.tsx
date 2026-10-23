@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 type ImageLightboxProps = {
   urls: string[];
@@ -21,15 +22,16 @@ export default function ImageLightbox({
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < urls.length - 1;
 
+  useCloseOnEscape(onClose);
+
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft' && hasPrev) onPrev?.();
-      if (e.key === 'ArrowRight' && hasNext) onNext?.();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft' && hasPrev) onPrev?.();
+      if (event.key === 'ArrowRight' && hasNext) onNext?.();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose, onPrev, onNext, hasPrev, hasNext]);
+  }, [onPrev, onNext, hasPrev, hasNext]);
 
   return (
     <div

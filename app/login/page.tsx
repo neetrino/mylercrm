@@ -8,8 +8,6 @@ import { useState } from 'react';
 
 const LOGO_URL =
   'https://pub-02e4900b528c4215ba0bfc3cf1e9934e.r2.dev/myler-logo.png';
-const LOGIN_BANNER_URL =
-  'https://pub-02e4900b528c4215ba0bfc3cf1e9934e.r2.dev/login-banner.jpeg';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,7 +34,7 @@ export default function LoginPage() {
         router.push('/apartments');
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       setError('Произошла ошибка при входе');
     } finally {
       setLoading(false);
@@ -45,28 +43,26 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${LOGIN_BANNER_URL})` }}
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-black/25" aria-hidden />
+      <div className="login-stage absolute inset-0" aria-hidden />
       <Snowfall />
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4">
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="card p-8">
-          <div className="mb-8 flex flex-col items-center">
+        <div className="card overflow-hidden">
+          <div className="brand-stripe h-1.5" />
+          <div className="p-8">
+          <div className="mb-8 flex flex-col items-center text-center">
             <Image
               src={LOGO_URL}
               alt="Myler"
               width={196}
               height={68}
-              className="h-14 w-auto object-contain"
+              className="h-16 w-auto object-contain"
               priority
               unoptimized
             />
-            <p className="mt-3 text-sm text-gray-500">
-              Sign in to your account
+            <p className="page-kicker mt-4">Free economic zone</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Sign in to the sales workspace
             </p>
           </div>
           
@@ -120,7 +116,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full"
+              className="btn-primary w-full py-2.5"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -132,6 +128,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+          </div>
         </div>
       </div>
       </div>

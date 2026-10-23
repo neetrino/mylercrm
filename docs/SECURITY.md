@@ -36,7 +36,7 @@
 
 ## Rate limiting
 
-- **Middleware** (`middleware.ts`)՝ սահմանափակում է `IP` + տեսակի հիման վրա.
+- **Proxy** (`proxy.ts`)՝ սահմանափակում է `IP` + տեսակի հիման վրա.
   - `/api/external/*` — `external`
   - `/api/landing/*` — `landing`
   - `/api/auth/*` — `auth` (credential stuffing-ի դեմ)

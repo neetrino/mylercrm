@@ -84,7 +84,7 @@ export default function DistrictsList() {
       <div className="mb-4">
         <button
           onClick={handleCreate}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="btn-primary"
         >
           + Create District
         </button>
@@ -98,9 +98,9 @@ export default function DistrictsList() {
         />
       )}
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+      <div className="card overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-blue-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 ID

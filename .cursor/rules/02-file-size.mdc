@@ -1,0 +1,30 @@
+---
+description: Hard limit — every source file stays at or under 300 lines. Split in the same change; do not defer.
+alwaysApply: true
+---
+
+# File size limit
+
+A source file (`.ts`, `.tsx`, `.js`, `.jsx`, `.css`) stays at **300 lines or fewer**. Count every line in the file, including blanks and comments.
+
+This is a stop-ship rule. A file already over the limit, or a change that would push it over, is not finished.
+
+## When the limit would break
+
+Split before ending the task. Do not land the over-limit file and split later.
+
+Put each piece in the same feature folder:
+
+- One UI section, one hook, or one pure helper per file
+- The original module keeps the public import path and composes the pieces
+- Splitting does not change behavior
+
+Name the new file after what it owns (`ApartmentDealSection.tsx`, `useApartmentsCatalog.ts`), not `utils2` or `partB`.
+
+## Do not
+
+- Let a file pass 300 and call the split a follow-up
+- Pad or strip blank lines just to change the count
+- Apply the limit to generated output (`node_modules`, `.next`)
+
+Functions still stay at or under 50 lines (`00-core.mdc`). A long function is not an excuse to grow the file.
