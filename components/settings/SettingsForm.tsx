@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { KeyRound } from 'lucide-react';
 
 const PASSWORD_MIN_LENGTH = 8;
 
@@ -67,14 +68,21 @@ function AccountCard(props: {
   onSubmit: (event: React.FormEvent) => void;
 }) {
   return (
-    <form onSubmit={props.onSubmit} className="card max-w-lg p-6 sm:p-8">
-      <Field id="login" label="Login" type="email" value={props.login} onChange={props.onLogin} autoComplete="username" />
-      <Field id="current-password" label="Current password" type="password" value={props.currentPassword} onChange={props.onCurrentPassword} autoComplete="current-password" />
-      <Field id="new-password" label="New password" type="password" value={props.newPassword} onChange={props.onNewPassword} autoComplete="new-password" optional />
-      <Field id="confirm-password" label="Confirm new password" type="password" value={props.confirmPassword} onChange={props.onConfirmPassword} autoComplete="new-password" optional />
+    <form onSubmit={props.onSubmit} className="card w-full p-6 sm:p-8">
+      <div className="mb-6 text-center">
+        <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+          <KeyRound className="h-5 w-5" aria-hidden />
+        </span>
+        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <p className="mt-1 text-sm text-gray-500">Update your login and password.</p>
+      </div>
+      <Field id="login" label="Login" type="email" placeholder="you@email.com" value={props.login} onChange={props.onLogin} autoComplete="username" />
+      <Field id="current-password" label="Current password" type="password" placeholder="Enter your current password" value={props.currentPassword} onChange={props.onCurrentPassword} autoComplete="current-password" />
+      <Field id="new-password" label="New password" type="password" placeholder="At least 8 characters" value={props.newPassword} onChange={props.onNewPassword} autoComplete="new-password" optional />
+      <Field id="confirm-password" label="Confirm new password" type="password" placeholder="Repeat the new password" value={props.confirmPassword} onChange={props.onConfirmPassword} autoComplete="new-password" optional />
       {props.error ? <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{props.error}</p> : null}
       {props.saved ? <p className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">Saved.</p> : null}
-      <button type="submit" disabled={props.loading} className="btn-primary">
+      <button type="submit" disabled={props.loading} className="btn-primary w-full">
         {props.loading ? 'Saving...' : 'Save'}
       </button>
     </form>
@@ -143,6 +151,7 @@ function Field({
   id,
   label,
   type,
+  placeholder,
   value,
   onChange,
   autoComplete,
@@ -151,6 +160,7 @@ function Field({
   id: string;
   label: string;
   type: 'email' | 'password';
+  placeholder: string;
   value: string;
   onChange: (value: string) => void;
   autoComplete: string;
@@ -162,6 +172,7 @@ function Field({
       <input
         id={id}
         type={type}
+        placeholder={placeholder}
         required={!optional}
         value={value}
         autoComplete={autoComplete}

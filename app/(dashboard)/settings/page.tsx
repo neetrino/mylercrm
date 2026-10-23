@@ -7,11 +7,7 @@ export default async function SettingsPage() {
   if (!session) redirect('/login');
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Settings</h1>
-        <p className="mt-1 text-sm text-gray-500">Change your login and password. Login is your email.</p>
-      </div>
+    <div className="mx-auto flex min-h-[70vh] w-full max-w-md items-center justify-center py-6">
       <SettingsForm email={session.user.email} />
     </div>
   );
