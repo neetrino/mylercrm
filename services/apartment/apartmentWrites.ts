@@ -64,7 +64,9 @@ export async function createApartment(data: {
     },
   });
 
-}\n\nexport async function updateApartment(id: number, data: Prisma.ApartmentUpdateInput) {
+}
+
+export async function updateApartment(id: number, data: Prisma.ApartmentUpdateInput) {
   // Если обновляются sqm или priceSqm, пересчитываем totalPrice
   if (data.sqm !== undefined || data.priceSqm !== undefined) {
     const current = await prisma.apartment.findUnique({
@@ -95,7 +97,9 @@ export async function createApartment(data: {
     },
   });
 
-}\n\nexport async function updateApartmentStatus(id: number, status: ApartmentStatus) {
+}
+
+export async function updateApartmentStatus(id: number, status: ApartmentStatus) {
   // Валидация: при статусе SOLD желательно иметь deal_date и ownership_name
   if (status === 'SOLD') {
     const apartment = await prisma.apartment.findUnique({
@@ -111,7 +115,10 @@ export async function createApartment(data: {
     data: { status, updatedAt: new Date() },
   });
 
-}\n\nexport async function deleteApartment(id: number) {
+}
+
+export async function deleteApartment(id: number) {
   await prisma.apartment.delete({
     where: { id },
-  });\n}\n
+  });
+}

@@ -2,7 +2,7 @@
 
 import { formatAmd } from '@/lib/formatAmd';
 import type { Dispatch, SetStateAction } from 'react';
-import type { Apartment } from './apartmentCardModel';
+import { getSalesTypeLabel, getSalesTypeValue, type Apartment } from './apartmentCardModel';
 
 type ApartmentOverviewSectionProps = {
   apartment: Apartment;

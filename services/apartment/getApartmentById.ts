@@ -95,4 +95,5 @@ export async function getApartmentById(id: number) {
     district_id: apartment.building.district.id,
     district_slug: apartment.building.district.slug,
     district_name: apartment.building.district.name,
-  };\n}\n
+  };
+}

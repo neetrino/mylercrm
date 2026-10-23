@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertCircle, CheckCircle2, Layers, Loader2, Save, SquarePen, X } from 'lucide-react';
+import type { EditedFields } from './apartmentListTypes';
 
 type ApartmentsBulkBarProps = {
   viewMode: 'grid' | 'list' | 'floor';
@@ -13,6 +14,7 @@ type ApartmentsBulkBarProps = {
   setListBulkEditMode: (value: boolean) => void;
   exitListBulkEdit: () => void;
   hasEdits: boolean;
+  editedFields: EditedFields;
   handleBulkSave: () => void;
   bulkSaving: boolean;
   bulkSaveResult: { type: 'success' | 'error'; message: string } | null;
@@ -30,6 +32,7 @@ export function ApartmentsBulkBar(props: ApartmentsBulkBarProps) {
     setListBulkEditMode,
     exitListBulkEdit,
     hasEdits,
+    editedFields,
     handleBulkSave,
     bulkSaving,
     bulkSaveResult,

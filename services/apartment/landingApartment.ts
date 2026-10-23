@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 
 /** Get apartment by public landing token (for share link). Returns null if not found. */
@@ -87,8 +88,10 @@ export async function getByLandingToken(token: string) {
     district_name: apartment.building.district.name,
   };
 
+}
+
 /** Ensure apartment has a landing token; generate if missing. Returns the token. */
-}\n\nexport async function ensureLandingToken(id: number): Promise<string | null> {
+export async function ensureLandingToken(id: number): Promise<string | null> {
   const apartment = await prisma.apartment.findUnique({
     where: { id },
     select: { landingToken: true },
@@ -100,4 +103,5 @@ export async function getByLandingToken(token: string) {
     where: { id },
     data: { landingToken: token },
   });
-  return token;\n}\n
+  return token;
+}

@@ -1,4 +1,4 @@
-type Attachment = {
+export type Attachment = {
   id: number;
   fileType: string;
   fileUrl: string;
@@ -7,7 +7,7 @@ type Attachment = {
   createdAt: string;
 };
 
-type LandingApartment = {
+export type LandingApartment = {
   id: number;
   apartmentNo: string;
   apartmentType: number | null;

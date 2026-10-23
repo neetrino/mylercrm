@@ -211,4 +211,5 @@ export async function listApartments(filters?: {
       total,
       total_pages: Math.ceil(total / limit),
     },
-  };\n}\n
+  };
+}

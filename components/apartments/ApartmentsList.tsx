@@ -39,6 +39,8 @@ export default function ApartmentsList() {
     setSelectedBuilding,
     selectedStatus,
     setSelectedStatus,
+    searchQuery,
+    setSearchQuery,
     searchInput,
     setSearchInput,
     showForm,
@@ -185,6 +187,7 @@ export default function ApartmentsList() {
         setListBulkEditMode={setListBulkEditMode}
         exitListBulkEdit={exitListBulkEdit}
         hasEdits={hasEdits}
+        editedFields={editedFields}
         handleBulkSave={handleBulkSave}
         bulkSaving={bulkSaving}
         bulkSaveResult={bulkSaveResult}

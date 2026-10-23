@@ -51,4 +51,5 @@ export async function bulkUpdateApartments(items: Array<{ id: number; apartmentN
       results.push(upd);
     }
     return results;
-  });\n}\n
+  });
+}

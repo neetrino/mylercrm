@@ -14,6 +14,17 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as XLSX from 'xlsx';
 import { prisma } from '../lib/prisma';
+import {
+  cell,
+  getSheet,
+  mapSalesType,
+  mapStatus,
+  normalizeSlug,
+  num,
+  parseDate,
+  str,
+  type Row,
+} from './excelImportParse';
 
 try {
   require('dotenv').config({ path: path.join(process.cwd(), '.env.local') });
@@ -23,18 +34,6 @@ try {
 require('dotenv').config();
 
 const DEFAULT_PATH = path.join(process.cwd(), 'import', 'MylerDBActualData-new.xlsx');
-
-import {
-  cell,
-  getSheet,
-  mapSalesType,
-  mapStatus,
-  normalizeSlug,
-  num,
-  str,
-  parseDate,
-  type Row,
-} from './excelImportParse';
 
 async function main() {
   const filePath = process.argv[2] || DEFAULT_PATH;

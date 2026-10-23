@@ -262,6 +262,7 @@ export function useApartmentsCatalog(
     selectedStatus,
     setSelectedStatus,
     searchQuery,
+    setSearchQuery,
     searchInput,
     setSearchInput,
     showForm,
