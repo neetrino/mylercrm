@@ -30,7 +30,7 @@ export function ApartmentDetailSheet({
         aria-label="Apartment details"
         className="sheet-drawer relative z-10 flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-l-3xl bg-white shadow-card"
       >
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+        <div className="sheet-scroll min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
           <ApartmentCard
             apartmentId={apartmentId}
             currentUserId={currentUserId}
