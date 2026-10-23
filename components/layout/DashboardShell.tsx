@@ -11,12 +11,10 @@ const DESKTOP_NAV_MIN_PX = 1024;
 
 type DashboardShellProps = {
   navItems: SidebarNavItem[];
-  email: string;
-  role: string;
   children: ReactNode;
 };
 
-export function DashboardShell({ navItems, email, role, children }: DashboardShellProps) {
+export function DashboardShell({ navItems, children }: DashboardShellProps) {
   const pathname = usePathname();
   const { open, setOpen } = useMobileNav(pathname);
 
@@ -31,13 +29,7 @@ export function DashboardShell({ navItems, email, role, children }: DashboardShe
           onClick={() => setOpen(false)}
         />
       ) : null}
-      <DashboardSidebar
-        navItems={navItems}
-        email={email}
-        role={role}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
+      <DashboardSidebar navItems={navItems} open={open} onClose={() => setOpen(false)} />
       <div className="min-w-0 lg:pl-64">
         <main className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</main>
       </div>

@@ -28,7 +28,7 @@ export default async function DashboardLayout({
   ];
 
   return (
-    <DashboardShell navItems={navItems} email={session.user.email ?? ''} role={session.user.role}>
+    <DashboardShell navItems={navItems}>
       {children}
     </DashboardShell>
   );

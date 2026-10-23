@@ -8,13 +8,11 @@ import { BRAND_LOGO_URL } from './brandLogo';
 
 type DashboardSidebarProps = {
   navItems: SidebarNavItem[];
-  email: string;
-  role: string;
   open: boolean;
   onClose: () => void;
 };
 
-export function DashboardSidebar({ navItems, email, role, open, onClose }: DashboardSidebarProps) {
+export function DashboardSidebar({ navItems, open, onClose }: DashboardSidebarProps) {
   const panel = open ? 'translate-x-0' : '-translate-x-full';
 
   return (
@@ -47,11 +45,6 @@ export function DashboardSidebar({ navItems, email, role, open, onClose }: Dashb
       </p>
       <SidebarNav navItems={navItems} onNavigate={onClose} />
       <div className="border-t border-white/10 p-4">
-        <div className="mb-3 rounded-2xl bg-white/10 px-3 py-3 ring-1 ring-white/10">
-          <p className="text-[11px] font-medium uppercase tracking-wider text-white/50">Signed in</p>
-          <p className="mt-1 break-all text-sm font-semibold text-white">{email}</p>
-          <p className="mt-0.5 text-xs capitalize text-yellow-300">{role.toLowerCase()}</p>
-        </div>
         <LogoutButton />
       </div>
     </aside>
