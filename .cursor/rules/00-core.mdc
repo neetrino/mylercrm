@@ -31,7 +31,7 @@ Understand the ask → inspect existing code → propose for large/risky changes
 - **UI:** inline styles (use CSS/Tailwind classes only).
 - **Magic numbers** — use named constants.
 - **Duplication** — DRY.
-- **Size:** functions > 50 lines; files > 300 lines; nesting > 3 levels (use early returns).
+- **Size:** functions > 50 lines; files > 300 lines (see `02-file-size.mdc` — split in the same change, do not defer); nesting > 3 levels (use early returns).
 - **Prod:** `console.log` — use logger.
 - **Dead:** commented-out code — remove.
 - **Secrets** in code/commits — env only.
@@ -81,6 +81,7 @@ Full DoD/PR/release checklists: [`docs/reference/Check/Quality/project-quality-c
 | Area | File |
 |------|------|
 | Architecture | `01-architecture.mdc` |
+| File size | `02-file-size.mdc` |
 | TypeScript | `03-typescript.mdc` |
 | React / Next | `04-react-nextjs.mdc` |
 | NestJS | `05-backend-nestjs.mdc` |

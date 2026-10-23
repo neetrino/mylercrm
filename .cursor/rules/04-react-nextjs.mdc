@@ -16,5 +16,6 @@ alwaysApply: false
 
 ## Forbidden
 
+- A component file over 300 lines. Split the section or hook out in the same change (`02-file-size.mdc`).
 - Fetching secrets or DB in client components.
 - Huge client bundles — move data fetching and heavy logic server-side when possible.
