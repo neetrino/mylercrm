@@ -56,6 +56,7 @@ export default function ApartmentsList() {
     setPreviewModalUrl,
     exportLoading,
     isAdmin,
+    currentUserId,
     handleExportExcel,
     fetchApartments,
     handleSort,
@@ -205,6 +206,7 @@ export default function ApartmentsList() {
           handleStatusChange={handleStatusChange}
           getStatusColor={getStatusColor}
           setPreviewModalUrl={setPreviewModalUrl}
+          currentUserId={currentUserId}
         />
       ) : viewMode === 'grid' ? (
         /* Cards Grid View */
@@ -216,6 +218,7 @@ export default function ApartmentsList() {
               onStatusChange={handleStatusChange}
               getStatusColor={getStatusColor}
               onOpenPreview={setPreviewModalUrl}
+              currentUserId={currentUserId}
             />
           ))}
         </div>
@@ -230,6 +233,7 @@ export default function ApartmentsList() {
           handleFieldEdit={handleFieldEdit}
           handleStatusChange={handleStatusChange}
           getStatusColor={getStatusColor}
+          currentUserId={currentUserId}
         />
       )}
 

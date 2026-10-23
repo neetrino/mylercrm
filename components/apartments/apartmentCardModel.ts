@@ -77,6 +77,7 @@ export type Apartment = {
   updatedAt: string;
   landingToken?: string | null;
   notes?: string | null;
+  in_review?: { userId: string; email: string; expiresAt: string } | null;
   attachments?: Attachment[] | AttachmentsGrouped;
 };
 
@@ -151,10 +152,6 @@ export function buildApartmentUpdateInput(
       if (formData.price_sqm !== undefined) {
         const priceSqmNum = parseNumber(formData.price_sqm);
         apiData.priceSqm = (priceSqmNum === null || priceSqmNum === 0) ? null : priceSqmNum;
-      }
-      if (formData.total_paid !== undefined) {
-        const totalPaidNum = parseNumber(formData.total_paid);
-        apiData.totalPaid = totalPaidNum;
       }
       if (formData.floor !== undefined) {
         const floorNum = parseNumber(formData.floor);

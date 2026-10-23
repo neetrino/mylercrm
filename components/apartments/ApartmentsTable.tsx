@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { formatAmd } from '@/lib/formatAmd';
 import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
+import { InReviewBadge } from './InReviewBadge';
 import type { ApartmentListRow, EditedFields } from './apartmentListTypes';
+import { activeReview, isLockedByOther } from '@/lib/inReview';
 
 type HeaderAlign = 'left' | 'right';
 
@@ -48,6 +50,7 @@ type ApartmentsTableProps = {
   handleFieldEdit: (id: number, field: 'apartmentNo' | 'apartmentName', value: string) => void;
   handleStatusChange: (id: number, status: string) => void;
   getStatusColor: (status: string) => string;
+  currentUserId: string;
 };
 
 export function ApartmentsTable(props: ApartmentsTableProps) {
@@ -61,6 +64,7 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
     handleFieldEdit,
     handleStatusChange,
     getStatusColor,
+    currentUserId,
   } = props;
 
   return (
@@ -90,6 +94,7 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
                   const edits = editedFields[apt.id];
                   const noEdited = edits?.apartmentNo !== undefined;
                   const nameEdited = edits?.apartmentName !== undefined;
+                  const review = activeReview(apt.in_review);
 
                   return (
                     <tr
@@ -131,15 +136,19 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
                         {apt.building.district.name} - {apt.building.name}
                       </td>
                       <td className="whitespace-nowrap px-6 py-2">
-                        <DropdownSelect
-                          value={apt.status}
-                          onChange={(next) => handleStatusChange(apt.id, next)}
-                          options={APARTMENT_STATUS_OPTIONS}
-                          placeholder="Status"
-                          ariaLabel="Apartment status"
-                          fullWidth={false}
-                          triggerClassName={`inline-flex cursor-pointer items-center gap-1 rounded-full border py-1 pl-3 pr-2.5 text-xs font-medium transition-colors ${getStatusColor(apt.status)}`}
-                        />
+                        <div className="flex flex-col items-start gap-1">
+                          <DropdownSelect
+                            value={apt.status}
+                            disabled={isLockedByOther(review, currentUserId)}
+                            onChange={(next) => handleStatusChange(apt.id, next)}
+                            options={APARTMENT_STATUS_OPTIONS}
+                            placeholder="Status"
+                            ariaLabel="Apartment status"
+                            fullWidth={false}
+                            triggerClassName={`inline-flex cursor-pointer items-center gap-1 rounded-full border py-1 pl-3 pr-2.5 text-xs font-medium transition-colors ${getStatusColor(apt.status)}`}
+                          />
+                          {review ? <InReviewBadge email={review.email} /> : null}
+                        </div>
                       </td>
                       <td className="whitespace-nowrap px-6 py-2 text-sm text-gray-900">
                         {apt.sqm ? `${apt.sqm} m²` : '-'}

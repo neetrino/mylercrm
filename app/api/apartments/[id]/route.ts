@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { apartmentService } from '@/services/apartment.service';
+import { apartmentHasPayments } from '@/services/apartmentPayments';
+import { assertStatusChangeAllowed } from '@/services/apartmentReview';
 import { updateApartmentSchema } from '@/lib/validations';
 import { invalidateCache, cacheKeys, cacheTags } from '@/lib/cache';
 import { handleRouteError, zodErrorResponse } from '@/lib/apiErrorResponse';
@@ -71,9 +73,21 @@ export async function PUT(
 
     const body = await request.json();
     const validatedData = updateApartmentSchema.parse(body);
+    if (validatedData.status !== undefined) {
+      const lock = await assertStatusChangeAllowed(id, session.user.id);
+      if (!lock.allowed) {
+        return NextResponse.json(
+          { error: `Apartment is in review by ${lock.email}`, reviewer: lock.email },
+          { status: 409 },
+        );
+      }
+    }
 
     // Преобразование данных для Prisma
     const updateData: Prisma.ApartmentUpdateInput = { ...validatedData };
+    if (updateData.totalPaid !== undefined && (await apartmentHasPayments(id))) {
+      delete updateData.totalPaid;
+    }
 
     // Преобразование даты
     if (validatedData.dealDate !== undefined) {

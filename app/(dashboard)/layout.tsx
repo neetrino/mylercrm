@@ -26,6 +26,7 @@ export default async function DashboardLayout({
       ? [
           { href: '/admin/buildings', label: 'Buildings', iconName: 'Building2' },
           { href: '/admin/districts', label: 'Districts', iconName: 'MapPin' },
+          { href: '/admin/users', label: 'Users', iconName: 'Users' },
         ]
       : []),
     { href: '/dashboard', label: 'Analytics', iconName: 'LayoutDashboard' },

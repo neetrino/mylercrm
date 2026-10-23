@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { toInReview } from '@/lib/inReview';
 
 export async function getApartmentById(id: number) {
   // Оптимизация: используем select для загрузки только нужных полей
@@ -60,6 +61,13 @@ export async function getApartmentById(id: number) {
           createdAt: true,
         },
       },
+      review: {
+        select: {
+          userId: true,
+          expiresAt: true,
+          user: { select: { email: true } },
+        },
+      },
     },
   });
 
@@ -78,8 +86,10 @@ export async function getApartmentById(id: number) {
       ? totalPrice - Number(apartment.totalPaid)
       : totalPrice;
 
+  const { review, ...rest } = apartment;
   return {
-    ...apartment,
+    ...rest,
+    in_review: toInReview(review, Date.now()),
     total_price: totalPrice,
     balance,
     sqm: apartment.sqm ? Number(apartment.sqm) : null,

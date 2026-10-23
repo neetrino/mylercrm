@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { Dispatch, SetStateAction } from 'react';
 import { getStatusColor, type Apartment } from './apartmentCardModel';
+import { InReviewBadge } from './InReviewBadge';
 
 type ApartmentCardChromeProps = {
   apartment: Apartment;
@@ -15,10 +16,12 @@ type ApartmentCardChromeProps = {
   setEditing: (value: boolean) => void;
   handleSave: () => void;
   handleStatusChange: (status: string) => void;
+  reviewEmail: string | null;
+  statusLocked: boolean;
 };
 
 export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
-  const { apartment, editing, setFormData, handleCopyLandingLink, landingCopied, activeTab, setActiveTab, setEditing, handleSave, handleStatusChange } = props;
+  const { apartment, editing, setFormData, handleCopyLandingLink, landingCopied, activeTab, setActiveTab, setEditing, handleSave, handleStatusChange, reviewEmail, statusLocked } = props;
   return (
     <>
       <div className="mb-6">
@@ -59,10 +62,12 @@ export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
                 </>
               )}
             </button>
+            {reviewEmail ? <InReviewBadge email={reviewEmail} /> : null}
             <select
               value={apartment.status}
+              disabled={statusLocked}
               onChange={(e) => handleStatusChange(e.target.value)}
-              className={`select-chevron-card badge border-2 ${getStatusColor(apartment.status)} cursor-pointer text-lg font-bold appearance-none bg-right transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+              className={`select-chevron-card badge border-2 ${getStatusColor(apartment.status)} cursor-pointer text-lg font-bold appearance-none bg-right transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60`}
             >
               <option value="UPCOMING">Upcoming</option>
               <option value="AVAILABLE">Available</option>

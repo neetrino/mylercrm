@@ -8,7 +8,9 @@ import { formatAmd } from '@/lib/formatAmd';
 import { getEmbedPreviewUrl } from '@/lib/getEmbedPreviewUrl';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
+import { InReviewBadge } from './InReviewBadge';
 import type { ApartmentListRow } from './apartmentListTypes';
+import { activeReview, isLockedByOther } from '@/lib/inReview';
 
 export type ApartmentCardItemProps = {
   apt: ApartmentListRow;
@@ -16,6 +18,7 @@ export type ApartmentCardItemProps = {
   getStatusColor: (status: string) => string;
   onOpenPreview: (url: string) => void;
   onLandingCopied?: () => void;
+  currentUserId?: string;
 };
 
 export const ApartmentCardItem = memo(
@@ -25,12 +28,15 @@ export const ApartmentCardItem = memo(
     getStatusColor,
     onOpenPreview,
     onLandingCopied,
+    currentUserId,
   }: ApartmentCardItemProps) => {
     const router = useRouter();
     const [landingCopying, setLandingCopying] = useState(false);
     const [landingJustCopied, setLandingJustCopied] = useState(false);
     const [statusMenuOpen, setStatusMenuOpen] = useState(false);
     const matterUrl = apt.matter_link ?? apt.matterLink ?? null;
+    const review = activeReview(apt.in_review);
+    const statusLocked = isLockedByOther(review, currentUserId);
     const embedUrl = matterUrl ? getEmbedPreviewUrl(matterUrl) : null;
 
     const handleCardClick = (e: React.MouseEvent) => {
@@ -88,10 +94,12 @@ export const ApartmentCardItem = memo(
             <p className="mt-0.5 truncate text-sm text-gray-500">
               {apt.building.district.name} — {apt.building.name}
             </p>
+            {review ? <InReviewBadge email={review.email} /> : null}
           </div>
           <div data-no-nav className="shrink-0">
             <DropdownSelect
               value={apt.status}
+              disabled={statusLocked}
               onChange={(next) => onStatusChange(apt.id, next)}
               options={APARTMENT_STATUS_OPTIONS}
               placeholder="Status"

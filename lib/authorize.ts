@@ -20,13 +20,13 @@ export async function authorizeUser(
   }
 
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { email: email.trim().toLowerCase() },
   });
 
   const hash = user?.passwordHash ?? DUMMY_PASSWORD_HASH;
   const isPasswordValid = await bcrypt.compare(password, hash);
 
-  if (!user || !isPasswordValid) {
+  if (!user || !isPasswordValid || user.status !== 'ACTIVE') {
     return null;
   }
 

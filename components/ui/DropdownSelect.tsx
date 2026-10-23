@@ -20,6 +20,7 @@ type DropdownSelectProps = {
   triggerClassName?: string;
   align?: 'start' | 'end';
   fullWidth?: boolean;
+  disabled?: boolean;
   onOpenChange?: (open: boolean) => void;
 };
 
@@ -50,6 +51,7 @@ export function DropdownSelect({
   triggerClassName,
   align = 'start',
   fullWidth = true,
+  disabled = false,
   onOpenChange,
 }: DropdownSelectProps) {
   const [open, setOpen] = useState(false);
@@ -75,8 +77,11 @@ export function DropdownSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
-        onClick={() => setOpenState(!open)}
-        className={triggerClassName ?? FIELD_TRIGGER}
+        disabled={disabled}
+        onClick={() => {
+          if (!disabled) setOpenState(!open);
+        }}
+        className={`${triggerClassName ?? FIELD_TRIGGER}${disabled ? ' cursor-not-allowed opacity-60' : ''}`}
       >
         <span className="truncate">{selected?.label ?? placeholder}</span>
         <ChevronDown

@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Home, 
-  LayoutDashboard, 
-  MapPin, 
-  Building2 
+import {
+  Home,
+  LayoutDashboard,
+  MapPin,
+  Building2,
+  Users,
 } from 'lucide-react';
 
 type NavItem = {
@@ -25,6 +26,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   LayoutDashboard,
   MapPin,
   Building2,
+  Users,
 };
 
 export default function SidebarNav({ navItems }: SidebarNavProps) {

@@ -12,6 +12,7 @@ type ApartmentsFloorViewProps = {
   handleStatusChange: (id: number, status: string) => void;
   getStatusColor: (status: string) => string;
   setPreviewModalUrl: (url: string | null) => void;
+  currentUserId: string;
 };
 
 export function ApartmentsFloorView({
@@ -21,6 +22,7 @@ export function ApartmentsFloorView({
   handleStatusChange,
   getStatusColor,
   setPreviewModalUrl,
+  currentUserId,
 }: ApartmentsFloorViewProps) {
           type GroupKey = string;
           const byBuilding: Record<GroupKey, ApartmentListRow[]> = {};
@@ -111,6 +113,7 @@ export function ApartmentsFloorView({
                                   onStatusChange={handleStatusChange}
                                   getStatusColor={getStatusColor}
                                   onOpenPreview={setPreviewModalUrl}
+                                  currentUserId={currentUserId}
                                 />
                               ))}
                             </div>

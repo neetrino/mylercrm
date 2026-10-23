@@ -190,9 +190,7 @@ export function ApartmentOverviewSection(props: ApartmentOverviewSectionProps) {
           {/* Financial Information Section: Total Price, Total Paid, Balance Remaining (auto) */}
           {(() => {
             const totalPrice = apartment.total_price ?? 0;
-            const totalPaid = editing
-              ? (typeof formData.total_paid === 'number' ? formData.total_paid : (apartment.total_paid ?? 0))
-              : (apartment.total_paid ?? 0);
+            const totalPaid = apartment.total_paid ?? 0;
             const balanceRemaining = totalPrice - totalPaid;
             const showBalanceRemaining =
               apartment.status === 'SOLD' || apartment.status === 'RESERVED' || totalPaid > 0;
@@ -212,25 +210,9 @@ export function ApartmentOverviewSection(props: ApartmentOverviewSectionProps) {
                     <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-gray-500">
                       Total Paid
                     </label>
-                    {editing ? (
-                      <input
-                        type="number"
-                        min={0}
-                        value={formData.total_paid ?? ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            total_paid: e.target.value === '' ? null : parseFloat(e.target.value),
-                          })
-                        }
-                        className="input-field mt-2"
-                        placeholder="AMD"
-                      />
-                    ) : (
-                      <p className="text-2xl font-bold text-gray-900">
-                        {totalPaid > 0 ? formatAmd(totalPaid) : '–'}
-                      </p>
-                    )}
+                    <p className="text-2xl font-bold text-gray-900">
+                      {totalPaid > 0 ? formatAmd(totalPaid) : '–'}
+                    </p>
                   </div>
                   {showBalanceRemaining && (
                     <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">

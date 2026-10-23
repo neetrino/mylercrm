@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 import type { ApartmentStatus } from '@prisma/client';
+import { toInReview } from '@/lib/inReview';
 
 export async function listApartments(filters?: {
   buildingId?: number;
@@ -135,6 +136,13 @@ export async function listApartments(filters?: {
             createdAt: true,
           },
         },
+        review: {
+          select: {
+            userId: true,
+            expiresAt: true,
+            user: { select: { email: true } },
+          },
+        },
       },
       orderBy,
       skip,
@@ -145,39 +153,41 @@ export async function listApartments(filters?: {
 
   // Вычисляемые поля
   const apartmentsWithCalculations = apartments.map((apt) => {
+    const { review, ...rest } = apt;
     const totalPrice =
-      apt.sqm && apt.priceSqm
-        ? Number(apt.sqm) * Number(apt.priceSqm)
+      rest.sqm && rest.priceSqm
+        ? Number(rest.sqm) * Number(rest.priceSqm)
         : null;
 
     const balance =
-      totalPrice && apt.totalPaid
-        ? totalPrice - Number(apt.totalPaid)
+      totalPrice && rest.totalPaid
+        ? totalPrice - Number(rest.totalPaid)
         : totalPrice;
 
     return {
-      ...apt,
+      ...rest,
+      in_review: toInReview(review, Date.now()),
       total_price: totalPrice,
       balance,
-      sqm: apt.sqm ? Number(apt.sqm) : null,
-      price_sqm: apt.priceSqm ? Number(apt.priceSqm) : null,
-      total_paid: apt.totalPaid ? Number(apt.totalPaid) : null,
-      deal_date: apt.dealDate ? apt.dealDate.toISOString().split('T')[0] : null,
-      ownership_name: apt.ownershipName,
-      email: apt.email,
-      passport_tax_no: apt.passportTaxNo,
-      phone: apt.phone,
-      sales_type: apt.salesType,
-      deal_description: apt.dealDescription,
-      matter_link: apt.matterLink,
-      floorplan_distribution: apt.floorplanDistribution,
-      exterior_link: apt.exteriorLink,
-      exterior_link2: apt.exteriorLink2,
-      buyer_address: apt.buyerAddress,
-      other_buyers: apt.otherBuyers,
-      payment_schedule: apt.paymentSchedule,
-      balance_remaining: apt.balanceRemaining ? Number(apt.balanceRemaining) : null,
-      attachments: apt.attachments || [],
+      sqm: rest.sqm ? Number(rest.sqm) : null,
+      price_sqm: rest.priceSqm ? Number(rest.priceSqm) : null,
+      total_paid: rest.totalPaid ? Number(rest.totalPaid) : null,
+      deal_date: rest.dealDate ? rest.dealDate.toISOString().split('T')[0] : null,
+      ownership_name: rest.ownershipName,
+      email: rest.email,
+      passport_tax_no: rest.passportTaxNo,
+      phone: rest.phone,
+      sales_type: rest.salesType,
+      deal_description: rest.dealDescription,
+      matter_link: rest.matterLink,
+      floorplan_distribution: rest.floorplanDistribution,
+      exterior_link: rest.exteriorLink,
+      exterior_link2: rest.exteriorLink2,
+      buyer_address: rest.buyerAddress,
+      other_buyers: rest.otherBuyers,
+      payment_schedule: rest.paymentSchedule,
+      balance_remaining: rest.balanceRemaining ? Number(rest.balanceRemaining) : null,
+      attachments: rest.attachments || [],
     };
   });
 

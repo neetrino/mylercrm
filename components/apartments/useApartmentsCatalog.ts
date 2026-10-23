@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 
 import { useSession } from 'next-auth/react';
 import type { Building, District } from '@prisma/client';
 import type { ApartmentListRow } from './apartmentListTypes';
+import { useReviewListPoll } from './useReviewListPoll';
 
 const APARTMENTS_VIEW_MODE_KEY = 'maylercrm:apartmentsViewMode';
 
@@ -77,10 +78,12 @@ export function useApartmentsCatalog(
     }
   };
 
-  const fetchApartments = useCallback(async (page: number = 1) => {
+  const fetchApartments = useCallback(async (page: number = 1, silent = false) => {
     try {
-      setLoading(true);
-      bulkResetRef.current?.();
+      if (!silent) {
+        setLoading(true);
+        bulkResetRef.current?.();
+      }
       let url = `/api/apartments?page=${page}&limit=21&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       if (selectedBuilding) {
         url += `&buildingId=${selectedBuilding}`;
@@ -97,12 +100,15 @@ export function useApartmentsCatalog(
       setApartments(data.items || []);
       setPagination(data.pagination || { page: 1, limit: 21, total: 0, total_pages: 0 });
     } catch (err) {
-      setError('Failed to load apartments');
-      console.error(err);
+      if (!silent) {
+        setError('Failed to load apartments');
+        console.error(err);
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, [sortBy, sortOrder, selectedBuilding, selectedStatus, searchQuery, bulkResetRef]);
+  useReviewListPoll(fetchApartments, currentPage);
   useEffect(() => {
     fetchBuildings();
   }, []);
@@ -179,7 +185,9 @@ export function useApartmentsCatalog(
         });
 
         if (!response.ok) {
-          throw new Error('Failed to update status');
+          const body = await response.json().catch(() => ({}));
+          const message = typeof body.error === 'string' ? body.error : 'Failed to update status';
+          throw new Error(message);
         }
 
         // Обновляем только текущую страницу в фоне (не блокируя UI)
@@ -194,14 +202,8 @@ export function useApartmentsCatalog(
           }, 100);
         }
       } catch (err) {
-        // Откатываем оптимистичное обновление при ошибке
-        setApartments((prevApartments) =>
-          prevApartments.map((apt) =>
-            apt.id === id ? { ...apt, status: apt.status } : apt
-          )
-        );
-        alert('Failed to update status');
-        console.error(err);
+        alert(err instanceof Error ? err.message : 'Failed to update status');
+        void fetchApartments(currentPage);
       }
     }, 0);
   }, [currentPage, fetchApartments]);
@@ -250,6 +252,7 @@ export function useApartmentsCatalog(
     setPreviewModalUrl,
     exportLoading,
     isAdmin,
+    currentUserId: session?.user?.id ?? '',
     handleExportExcel,
     fetchApartments,
     handleSort,

@@ -8,14 +8,18 @@ import { ApartmentCardChrome } from './ApartmentCardChrome';
 import { ApartmentDealSection } from './ApartmentDealSection';
 import { ApartmentLinksSection } from './ApartmentLinksSection';
 import { ApartmentOverviewSection } from './ApartmentOverviewSection';
+import { ApartmentPaymentsSection } from './ApartmentPaymentsSection';
 import { ApartmentPreviewModal } from './ApartmentPreviewModal';
 import { buildApartmentUpdateInput, type Apartment } from './apartmentCardModel';
+import { useApartmentReview } from './useApartmentReview';
+import { activeReview, isLockedByOther } from '@/lib/inReview';
 
 interface ApartmentCardProps {
   apartmentId: number;
+  currentUserId: string;
 }
 
-export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
+export default function ApartmentCard({ apartmentId, currentUserId }: ApartmentCardProps) {
   const router = useRouter();
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +30,7 @@ export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewOriginalUrl, setPreviewOriginalUrl] = useState<string | null>(null);
   const [landingCopied, setLandingCopied] = useState(false);
+  const { blockedBy } = useApartmentReview(apartmentId);
 
   useEffect(() => {
     // При загрузке страницы всегда обновляем без кэша для получения актуальных данных
@@ -115,7 +120,11 @@ export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
           body: JSON.stringify({ status: newStatus }),
         });
 
-        if (!response.ok) throw new Error('Failed to update status');
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({}));
+          const message = typeof body.error === 'string' ? body.error : 'Failed to update status';
+          throw new Error(message);
+        }
 
         const updated = await response.json();
         // Обновляем статус из ответа сервера
@@ -159,7 +168,7 @@ export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
         console.error('Status update error:', err);
         // Откатываем оптимистичное обновление при ошибке
         setApartment((prev) => (prev ? { ...prev, status: previousStatus || 'UPCOMING' } : prev));
-        alert('Failed to update status');
+        alert(err instanceof Error ? err.message : 'Failed to update status');
       }
     }, 0);
   };
@@ -216,6 +225,8 @@ export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
         setEditing={setEditing}
         handleSave={handleSave}
         handleStatusChange={handleStatusChange}
+        reviewEmail={blockedBy ?? activeReview(apartment.in_review)?.email ?? null}
+        statusLocked={Boolean(blockedBy) || isLockedByOther(activeReview(apartment.in_review), currentUserId)}
       />
 
       {/* Tab Content */}
@@ -226,6 +237,12 @@ export default function ApartmentCard({ apartmentId }: ApartmentCardProps) {
             editing={editing}
             formData={formData}
             setFormData={setFormData}
+          />
+          <ApartmentPaymentsSection
+            apartmentId={apartmentId}
+            onChanged={() => {
+              void fetchApartment(true, false);
+            }}
           />
           <ApartmentDealSection
             apartment={apartment}
