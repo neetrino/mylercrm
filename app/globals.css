@@ -43,8 +43,17 @@
   to { opacity: 1; }
 }
 
+@keyframes sheet-slide {
+  from { transform: translateX(1.5rem); }
+  to { transform: translateX(0); }
+}
+
 .sheet-panel {
   animation: sheet-fade 180ms ease-out;
+}
+
+.sheet-drawer {
+  animation: sheet-slide 240ms ease-out;
 }
 
 :root {

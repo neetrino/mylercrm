@@ -4,24 +4,20 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { z } from 'zod';
-import { ApartmentCardChrome } from './ApartmentCardChrome';
-import { ApartmentDealSection } from './ApartmentDealSection';
-import { ApartmentLinksSection } from './ApartmentLinksSection';
-import { ApartmentOverviewSection } from './ApartmentOverviewSection';
-import { ApartmentPaymentsSection } from './ApartmentPaymentsSection';
-import { ApartmentPreviewModal } from './ApartmentPreviewModal';
+import { ApartmentCardPage } from './ApartmentCardPage';
+import { ApartmentSheetView } from './sheet/ApartmentSheetView';
 import { buildApartmentUpdateInput, type Apartment } from './apartmentCardModel';
 import { useApartmentReview } from './useApartmentReview';
-import { activeReview, isLockedByOther } from '@/lib/inReview';
 
 interface ApartmentCardProps {
   apartmentId: number;
   currentUserId: string;
   currentUserEmail: string;
   embedded?: boolean;
+  onClose?: () => void;
 }
 
-export default function ApartmentCard({ apartmentId, currentUserId, currentUserEmail, embedded = false }: ApartmentCardProps) {
+export default function ApartmentCard({ apartmentId, currentUserId, currentUserEmail, embedded = false, onClose }: ApartmentCardProps) {
   const router = useRouter();
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -215,78 +211,46 @@ export default function ApartmentCard({ apartmentId, currentUserId, currentUserE
     );
   }
 
+  const shared = {
+    apartment,
+    apartmentId,
+    currentUserId,
+    currentUserEmail,
+    blockedBy,
+    holding,
+    editing,
+    formData,
+    setFormData,
+    setEditing,
+    landingCopied,
+    onPaymentsChanged: () => { void fetchApartment(true, false); },
+    refreshAfterUpload,
+    previewUrl,
+    setPreviewUrl,
+    previewOriginalUrl,
+    setPreviewOriginalUrl,
+  };
+
+  if (embedded) {
+    return (
+      <ApartmentSheetView
+        {...shared}
+        onSave={() => { void handleSave(); }}
+        onStatus={(status) => { void handleStatusChange(status); }}
+        onCopyLanding={() => { void handleCopyLandingLink(); }}
+        onClose={onClose}
+      />
+    );
+  }
+
   return (
-    <div>
-      {/* Header */}
-      <ApartmentCardChrome
-        apartment={apartment}
-        editing={editing}
-        setFormData={setFormData}
-        handleCopyLandingLink={handleCopyLandingLink}
-        landingCopied={landingCopied}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setEditing={setEditing}
-        handleSave={handleSave}
-        handleStatusChange={handleStatusChange}
-        reviewEmail={
-          blockedBy
-            ?? (holding ? currentUserEmail : null)
-            ?? activeReview(apartment.in_review)?.email
-            ?? null
-        }
-        statusLocked={Boolean(blockedBy) || (!holding && isLockedByOther(activeReview(apartment.in_review), currentUserId))}
-        embedded={embedded}
-      />
-
-      {/* Tab Content */}
-      {activeTab === 'overview' && (
-        <div className="space-y-6">
-          <ApartmentOverviewSection
-            apartment={apartment}
-            editing={editing}
-            formData={formData}
-            setFormData={setFormData}
-          />
-          <ApartmentPaymentsSection
-            apartmentId={apartmentId}
-            onChanged={() => {
-              void fetchApartment(true, false);
-            }}
-          />
-          <ApartmentDealSection
-            apartment={apartment}
-            editing={editing}
-            formData={formData}
-            setFormData={setFormData}
-            apartmentId={apartmentId}
-            refreshAfterUpload={refreshAfterUpload}
-          />
-        </div>
-      )}
-
-      {activeTab === 'links' && (
-        <div className="space-y-6">
-          {/* Links Section */}
-          <ApartmentLinksSection
-            apartment={apartment}
-            editing={editing}
-            formData={formData}
-            setFormData={setFormData}
-            apartmentId={apartmentId}
-            refreshAfterUpload={refreshAfterUpload}
-            setPreviewUrl={setPreviewUrl}
-            setPreviewOriginalUrl={setPreviewOriginalUrl}
-          />
-        </div>
-      )}
-
-      <ApartmentPreviewModal
-        previewUrl={previewUrl}
-        setPreviewUrl={setPreviewUrl}
-        previewOriginalUrl={previewOriginalUrl}
-        setPreviewOriginalUrl={setPreviewOriginalUrl}
-      />
-    </div>
+    <ApartmentCardPage
+      {...shared}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      handleCopyLandingLink={() => { void handleCopyLandingLink(); }}
+      handleSave={() => { void handleSave(); }}
+      handleStatusChange={(status) => { void handleStatusChange(status); }}
+    />
   );
 }

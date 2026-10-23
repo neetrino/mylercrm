@@ -1,5 +1,6 @@
 'use client';
 
+import { createPortal } from 'react-dom';
 import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 type ApartmentPreviewModalProps = {
@@ -16,10 +17,8 @@ export function ApartmentPreviewModal(props: ApartmentPreviewModalProps) {
     setPreviewOriginalUrl(null);
   };
   useCloseOnEscape(closePreview, Boolean(previewUrl));
-  return (
-    <>
-      {/* 3D preview modal (iframe) */}
-      {previewUrl && (
+  if (!previewUrl || typeof document === 'undefined') return null;
+  return createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4"
           onClick={() => { setPreviewUrl(null); setPreviewOriginalUrl(null); }}
@@ -70,8 +69,7 @@ export function ApartmentPreviewModal(props: ApartmentPreviewModalProps) {
               </div>
             )}
           </div>
-        </div>
-      )}
-    </>
+        </div>,
+    document.body,
   );
 }

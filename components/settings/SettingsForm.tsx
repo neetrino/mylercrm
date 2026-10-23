@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { KeyRound } from 'lucide-react';
 
 const PASSWORD_MIN_LENGTH = 8;
+const PASSWORD_PLACEHOLDER = '*'.repeat(PASSWORD_MIN_LENGTH);
 
 type SettingsFormProps = {
   email: string;
@@ -77,9 +78,9 @@ function AccountCard(props: {
         <p className="mt-1 text-sm text-gray-500">Update your login and password.</p>
       </div>
       <Field id="login" label="Login" type="email" placeholder="you@email.com" value={props.login} onChange={props.onLogin} autoComplete="username" />
-      <Field id="current-password" label="Current password" type="password" placeholder="Enter your current password" value={props.currentPassword} onChange={props.onCurrentPassword} autoComplete="current-password" />
-      <Field id="new-password" label="New password" type="password" placeholder="At least 8 characters" value={props.newPassword} onChange={props.onNewPassword} autoComplete="new-password" optional />
-      <Field id="confirm-password" label="Confirm new password" type="password" placeholder="Repeat the new password" value={props.confirmPassword} onChange={props.onConfirmPassword} autoComplete="new-password" optional />
+      <Field id="current-password" label="Current password" type="password" placeholder={PASSWORD_PLACEHOLDER} value={props.currentPassword} onChange={props.onCurrentPassword} autoComplete="current-password" />
+      <Field id="new-password" label="New password" type="password" placeholder={PASSWORD_PLACEHOLDER} value={props.newPassword} onChange={props.onNewPassword} autoComplete="new-password" optional />
+      <Field id="confirm-password" label="Confirm new password" type="password" placeholder={PASSWORD_PLACEHOLDER} value={props.confirmPassword} onChange={props.onConfirmPassword} autoComplete="new-password" optional />
       {props.error ? <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{props.error}</p> : null}
       {props.saved ? <p className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">Saved.</p> : null}
       <button type="submit" disabled={props.loading} className="btn-primary w-full">

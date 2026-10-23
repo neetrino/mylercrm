@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
 import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 import ApartmentCard from './ApartmentCard';
 
@@ -23,31 +22,21 @@ export function ApartmentDetailSheet({
   useSheetScrollLock();
 
   return createPortal(
-    <div className="sheet-panel fixed inset-0 z-40 flex justify-end">
-      <button type="button" aria-label="Close details" className="absolute inset-0 bg-blue-950/40" onClick={onClose} />
+    <div className="sheet-panel fixed inset-0 z-50 flex justify-end p-3 sm:p-4">
+      <button type="button" aria-label="Close details" className="absolute inset-0 bg-blue-950/30 backdrop-blur-sm" onClick={onClose} />
       <aside
         role="dialog"
         aria-modal="true"
         aria-label="Apartment details"
-        className="relative flex h-full w-full max-w-4xl flex-col bg-[var(--brand-ice)] shadow-card"
+        className="sheet-drawer relative z-10 flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-card"
       >
-        <div className="flex items-center justify-between border-b border-blue-100 bg-white px-5 py-3">
-          <p className="text-sm font-semibold text-blue-900">Apartment details</p>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-gray-600 hover:bg-blue-50"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
           <ApartmentCard
             apartmentId={apartmentId}
             currentUserId={currentUserId}
             currentUserEmail={currentUserEmail}
             embedded
+            onClose={onClose}
           />
         </div>
       </aside>
