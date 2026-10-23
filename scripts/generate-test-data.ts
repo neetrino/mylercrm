@@ -74,7 +74,7 @@ async function main() {
   const batchSize = 50;
 
   for (let i = 0; i < 320; i += batchSize) {
-    const batch = [];
+    const batch: Prisma.ApartmentCreateManyInput[] = [];
     const end = Math.min(i + batchSize, 320);
 
     for (let j = i; j < end; j++) {
@@ -89,7 +89,7 @@ async function main() {
       const priceSqm = new Prisma.Decimal(500000 + Math.random() * 300000); // 500K-800K AMD
       const totalPrice = new Prisma.Decimal(Number(sqm) * Number(priceSqm));
 
-      const apartmentData: any = {
+      const apartmentData: Prisma.ApartmentCreateManyInput = {
         buildingId: building.id,
         apartmentNo,
         apartmentType,

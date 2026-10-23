@@ -124,7 +124,7 @@ export function useApartmentsBulk(args: UseApartmentsBulkArgs) {
     } finally {
       setBulkSaving(false);
     }
-  }, [editedFields, hasEdits]);
+  }, [editedFields, hasEdits, setApartments]);
 
   const handleLoadAll = useCallback(async () => {
     setLoadingAll(true);
@@ -167,7 +167,7 @@ export function useApartmentsBulk(args: UseApartmentsBulkArgs) {
     } finally {
       setLoadingAll(false);
     }
-  }, [sortBy, sortOrder, selectedBuilding, selectedStatus, searchQuery]);
+  }, [sortBy, sortOrder, selectedBuilding, selectedStatus, searchQuery, setApartments, setError, setPagination]);
 
   const reset = useCallback(() => {
     setAllLoaded(false);

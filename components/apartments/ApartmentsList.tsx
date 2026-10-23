@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ApartmentForm from './ApartmentForm';
 import { ApartmentCardItem } from './ApartmentCardItem';
 import { ApartmentsBulkBar } from './ApartmentsBulkBar';
@@ -26,7 +26,9 @@ export default function ApartmentsList() {
     selectedStatus: catalog.selectedStatus,
     searchQuery: catalog.searchQuery,
   });
-  bulkResetRef.current = bulk.reset;
+  useEffect(() => {
+    bulkResetRef.current = bulk.reset;
+  }, [bulk.reset]);
 
   const {
     apartments,

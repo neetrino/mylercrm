@@ -2,7 +2,7 @@
 
 import FileUpload from './FileUpload';
 import type { Dispatch, SetStateAction } from 'react';
-import { getSalesTypeLabel, getSalesTypeValue, normalizeAttachmentsForUpload, type Apartment } from './apartmentCardModel';
+import { normalizeAttachmentsForUpload, type Apartment } from './apartmentCardModel';
 
 type ApartmentDealSectionProps = {
   apartment: Apartment;

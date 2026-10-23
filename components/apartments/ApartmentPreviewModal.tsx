@@ -1,7 +1,5 @@
 'use client';
 
-import type { Dispatch, SetStateAction } from 'react';
-
 type ApartmentPreviewModalProps = {
   previewUrl: string | null;
   setPreviewUrl: (url: string | null) => void;

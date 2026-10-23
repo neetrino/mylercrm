@@ -8,7 +8,6 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
-  LabelList,
 } from 'recharts';
 import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 import { formatAmd } from '@/lib/formatAmd';

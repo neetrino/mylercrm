@@ -144,7 +144,7 @@ export async function listApartments(filters?: {
   ]);
 
   // Вычисляемые поля
-  let apartmentsWithCalculations = apartments.map((apt) => {
+  const apartmentsWithCalculations = apartments.map((apt) => {
     const totalPrice =
       apt.sqm && apt.priceSqm
         ? Number(apt.sqm) * Number(apt.priceSqm)

@@ -36,7 +36,7 @@ export default function LoginPage() {
         router.push('/apartments');
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       setError('Произошла ошибка при входе');
     } finally {
       setLoading(false);

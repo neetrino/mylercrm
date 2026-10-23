@@ -13,7 +13,6 @@ export function useApartmentsCatalog(
   const { data: session } = useSession();
   const [apartments, setApartments] = useState<ApartmentListRow[]>([]);
   const [buildings, setBuildings] = useState<(Building & { district: District })[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedBuilding, setSelectedBuilding] = useState<number | null>(null);
@@ -66,18 +65,6 @@ export function useApartmentsCatalog(
     }
   };
 
-  const fetchDistricts = async () => {
-    try {
-      const response = await fetch('/api/districts');
-      if (response.ok) {
-        const data = await response.json();
-        setDistricts(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const fetchBuildings = async () => {
     try {
       const response = await fetch('/api/buildings');
@@ -117,7 +104,6 @@ export function useApartmentsCatalog(
     }
   }, [sortBy, sortOrder, selectedBuilding, selectedStatus, searchQuery, bulkResetRef]);
   useEffect(() => {
-    fetchDistricts();
     fetchBuildings();
   }, []);
 
@@ -234,21 +220,6 @@ export function useApartmentsCatalog(
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
   }, []);
-
-  const getStatusLabel = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'upcoming':
-        return 'Upcoming';
-      case 'available':
-        return 'Available';
-      case 'reserved':
-        return 'Reserved';
-      case 'sold':
-        return 'Sold';
-      default:
-        return status;
-    }
-  };
 
   return {
     apartments,

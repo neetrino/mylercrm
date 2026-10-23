@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useSyncExternalStore, type CSSProperties } from 'react';
 
 type LayerKind = 'back' | 'mid' | 'front';
 
@@ -64,6 +64,35 @@ function buildLayerFlakes(count: number, layer: LayerKind): Flake[] {
 
 const FLAKES_PER_LAYER = 60;
 
+type SnowLayers = {
+  back: Flake[];
+  mid: Flake[];
+  front: Flake[];
+};
+
+const EMPTY_SNOW: SnowLayers = { back: [], mid: [], front: [] };
+
+let clientSnow: SnowLayers | null = null;
+
+function subscribeSnow(): () => void {
+  return () => undefined;
+}
+
+function getClientSnow(): SnowLayers {
+  if (!clientSnow) {
+    clientSnow = {
+      back: buildLayerFlakes(FLAKES_PER_LAYER, 'back'),
+      mid: buildLayerFlakes(FLAKES_PER_LAYER, 'mid'),
+      front: buildLayerFlakes(FLAKES_PER_LAYER, 'front'),
+    };
+  }
+  return clientSnow;
+}
+
+function getServerSnow(): SnowLayers {
+  return EMPTY_SNOW;
+}
+
 function FlakeSpan({ f }: { f: Flake }) {
   const glow = Math.max(1, f.sizePx * 0.4);
   return (
@@ -90,15 +119,7 @@ function FlakeSpan({ f }: { f: Flake }) {
 }
 
 export default function Snowfall() {
-  const [back, setBack] = useState<Flake[]>([]);
-  const [mid, setMid] = useState<Flake[]>([]);
-  const [front, setFront] = useState<Flake[]>([]);
-
-  useEffect(() => {
-    setBack(buildLayerFlakes(FLAKES_PER_LAYER, 'back'));
-    setMid(buildLayerFlakes(FLAKES_PER_LAYER, 'mid'));
-    setFront(buildLayerFlakes(FLAKES_PER_LAYER, 'front'));
-  }, []);
+  const { back, mid, front } = useSyncExternalStore(subscribeSnow, getClientSnow, getServerSnow);
 
   if (back.length === 0) {
     return null;

@@ -100,16 +100,6 @@ export async function updateApartment(id: number, data: Prisma.ApartmentUpdateIn
 }
 
 export async function updateApartmentStatus(id: number, status: ApartmentStatus) {
-  // Валидация: при статусе SOLD желательно иметь deal_date и ownership_name
-  if (status === 'SOLD') {
-    const apartment = await prisma.apartment.findUnique({
-      where: { id },
-      select: { dealDate: true, ownershipName: true },
-    });
-
-    // Apartment marked SOLD; deal_date/ownership_name may be filled later
-  }
-
   return await prisma.apartment.update({
     where: { id },
     data: { status, updatedAt: new Date() },

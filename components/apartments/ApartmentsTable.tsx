@@ -6,6 +6,38 @@ import { formatAmd } from '@/lib/formatAmd';
 import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 import type { ApartmentListRow, EditedFields } from './apartmentListTypes';
 
+type HeaderAlign = 'left' | 'right';
+
+type SortableHeaderProps = {
+  field: string;
+  label: string;
+  align?: HeaderAlign;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  onSort: (field: string) => void;
+};
+
+function SortableHeader({ field, label, align = 'left', sortBy, sortOrder, onSort }: SortableHeaderProps) {
+  const isActive = sortBy === field;
+  return (
+    <th
+      className={`px-6 py-3 text-${align} text-xs font-medium uppercase tracking-wider text-gray-500 cursor-pointer select-none hover:bg-gray-100 transition-colors`}
+      onClick={() => onSort(field)}
+    >
+      <div className="flex items-center gap-1">
+        <span>{label}</span>
+        <span className="text-gray-400">
+          {isActive ? (
+            sortOrder === 'asc' ? '↑' : '↓'
+          ) : (
+            <span className="text-gray-300">⇅</span>
+          )}
+        </span>
+      </div>
+    </th>
+  );
+}
+
 type ApartmentsTableProps = {
   apartments: ApartmentListRow[];
   editedFields: EditedFields;
@@ -31,27 +63,6 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
     getStatusColor,
   } = props;
 
-  const SortableHeader = ({ field, label, align = 'left' }: { field: string; label: string; align?: 'left' | 'right' }) => {
-    const isActive = sortBy === field;
-    return (
-      <th
-        className={`px-6 py-3 text-${align} text-xs font-medium uppercase tracking-wider text-gray-500 cursor-pointer select-none hover:bg-gray-100 transition-colors`}
-        onClick={() => onSort(field)}
-      >
-        <div className="flex items-center gap-1">
-          <span>{label}</span>
-          <span className="text-gray-400">
-            {isActive ? (
-              sortOrder === 'asc' ? '↑' : '↓'
-            ) : (
-              <span className="text-gray-300">⇅</span>
-            )}
-          </span>
-        </div>
-      </th>
-    );
-  };
-
   return (
     <>
         <div className="card overflow-hidden">
@@ -59,16 +70,16 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <SortableHeader field="apartmentNo" label="No" />
+                  <SortableHeader field="apartmentNo" label="No" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                     Apt Name
                   </th>
-                  <SortableHeader field="building" label="Building" />
-                  <SortableHeader field="status" label="Status" />
-                  <SortableHeader field="sqm" label="Area (m²)" />
-                  <SortableHeader field="total_price" label="Price" align="right" />
-                  <SortableHeader field="total_paid" label="Paid" align="right" />
-                  <SortableHeader field="balance" label="Balance" align="right" />
+                  <SortableHeader field="building" label="Building" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+                  <SortableHeader field="status" label="Status" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+                  <SortableHeader field="sqm" label="Area (m²)" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+                  <SortableHeader field="total_price" label="Price" align="right" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+                  <SortableHeader field="total_paid" label="Paid" align="right" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+                  <SortableHeader field="balance" label="Balance" align="right" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
                   <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
                     Actions
                   </th>

@@ -172,7 +172,6 @@ export default function LandingView({ token }: { token: string }) {
           progressImages={progressImages}
           images={images}
           setLightbox={setLightbox}
-          scrollTo={scrollTo}
         />
       </div>
 

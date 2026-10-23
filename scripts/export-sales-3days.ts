@@ -10,14 +10,11 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as XLSX from 'xlsx';
+import dotenv from 'dotenv';
 import { prisma } from '../lib/prisma';
 
-try {
-  require('dotenv').config({ path: path.join(process.cwd(), '.env.local') });
-} catch {
-  // ignore
-}
-require('dotenv').config();
+dotenv.config({ path: path.join(process.cwd(), '.env.local') });
+dotenv.config();
 
 const STATUS_LABELS: Record<string, string> = {
   UPCOMING: 'Скоро',

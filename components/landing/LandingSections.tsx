@@ -12,7 +12,6 @@ type LandingSectionsProps = {
   progressImages: Attachment[];
   images: Attachment[];
   setLightbox: (value: { urls: string[]; index: number } | null | ((prev: { urls: string[]; index: number } | null) => { urls: string[]; index: number } | null)) => void;
-  scrollTo: (id: string) => void;
 };
 
 export function LandingSections(props: LandingSectionsProps) {
@@ -25,7 +24,6 @@ export function LandingSections(props: LandingSectionsProps) {
     progressImages,
     images,
     setLightbox,
-    scrollTo,
   } = props;
 
   return (

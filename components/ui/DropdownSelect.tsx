@@ -223,7 +223,10 @@ function useDismissOnOutside(
   onClose: () => void,
 ) {
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return undefined;

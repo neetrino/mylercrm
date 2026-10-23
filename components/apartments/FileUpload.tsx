@@ -63,7 +63,7 @@ export default function FileUpload({
         throw new Error(error.error || 'Failed to upload file');
       }
 
-      const uploadedFile = await response.json();
+      await response.json();
       
       // Сбрасываем input сразу после успешной загрузки
       e.target.value = '';
@@ -106,21 +106,6 @@ export default function FileUpload({
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  };
-
-  const getFileTypeLabel = (type: string) => {
-    switch (type) {
-      case 'AGREEMENT':
-        return 'Agreement';
-      case 'FLOORPLAN':
-        return 'Floorplan';
-      case 'IMAGE':
-        return 'Image';
-      case 'PROGRESS_IMAGE':
-        return 'Progress Image';
-      default:
-        return type;
-    }
   };
 
   const isImageType = (type: string) =>

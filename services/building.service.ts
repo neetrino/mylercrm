@@ -22,7 +22,7 @@ export const buildingService = {
         },
         orderBy: { name: 'asc' },
       });
-    } catch (e) {
+    } catch {
       // Fallback if floorPlans relation missing (e.g. old Prisma client)
       return await prisma.building.findMany({
         where,
