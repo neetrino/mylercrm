@@ -113,72 +113,58 @@ export const ApartmentCardItem = memo(
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm">
-          <div className="flex justify-between gap-2">
-            <span className="text-gray-500">Area</span>
-            <span className="tabular-nums font-medium text-gray-900">
-              {apt.sqm ? `${apt.sqm} m²` : '—'}
-            </span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span className="text-gray-500">Price</span>
-            <span className="tabular-nums font-semibold text-gray-900">
-              {apt.total_price ? formatAmd(apt.total_price) : '—'}
-            </span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span className="text-gray-500">Paid</span>
-            <span className="tabular-nums font-medium text-gray-900">
-              {apt.total_paid ? formatAmd(apt.total_paid) : '—'}
-            </span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span className="text-gray-500">Balance</span>
-            <span className="tabular-nums font-medium text-gray-900">
-              {apt.balance ? formatAmd(apt.balance) : '—'}
-            </span>
-          </div>
+        <div className="grid grid-cols-2 gap-3 border-t border-blue-50 pt-4">
+          <CardStat label="Area" value={apt.sqm ? `${apt.sqm} m²` : '—'} />
+          <CardStat label="Price" value={apt.total_price ? formatAmd(apt.total_price) : '—'} />
+          <CardStat label="Paid" value={apt.total_paid ? formatAmd(apt.total_paid) : '—'} />
+          <CardStat label="Balance" value={apt.balance ? formatAmd(apt.balance) : '—'} />
         </div>
 
-        <div
-          className="mt-4 flex items-stretch gap-3 border-t border-gray-100 pt-4"
-          data-no-nav
-        >
+        <div className="mt-4 flex items-center gap-2 border-t border-blue-50 pt-4" data-no-nav>
           <Link
             href={`/apartments/${apt.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+            className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 px-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             <Eye className="h-4 w-4 shrink-0" />
-            <span className="truncate">View Details</span>
+            Open
           </Link>
           <button
             type="button"
             onClick={handleLandingCopy}
             disabled={landingCopying}
-            className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-100 px-4 py-2.5 text-sm font-semibold text-yellow-800 transition-colors hover:bg-yellow-200 disabled:opacity-60"
-            title="Copy landing link"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-800 transition-colors hover:bg-yellow-200 disabled:opacity-60"
+            title={landingJustCopied ? 'Copied' : 'Copy landing link'}
+            aria-label={landingJustCopied ? 'Landing link copied' : 'Copy landing link'}
           >
-            <Link2 className="h-4 w-4 shrink-0" />
-            <span className="truncate">
-              {landingCopying ? '…' : landingJustCopied ? 'Copied!' : 'Landing'}
-            </span>
+            <Link2 className="h-4 w-4" />
           </button>
-          {embedUrl && (
+          {embedUrl ? (
             <button
               type="button"
               onClick={handlePreviewClick}
-              className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-700 transition-colors hover:bg-green-100"
               title="Open 3D preview"
+              aria-label="Open 3D preview"
             >
-              <Box className="h-4 w-4 shrink-0" />
-              <span className="truncate">3D Preview</span>
+              <Box className="h-4 w-4" />
             </button>
-          )}
+          ) : null}
         </div>
       </article>
     );
   }
 );
+
+function CardStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <p className="text-xs text-gray-500">{label}</p>
+      <p className="mt-0.5 truncate text-sm font-semibold tabular-nums text-gray-900" title={value}>
+        {value}
+      </p>
+    </div>
+  );
+}
 
 ApartmentCardItem.displayName = 'ApartmentCardItem';
