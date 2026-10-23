@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import { UserForm } from './UserForm';
+import { UserStats } from './UserStats';
+import { UsersLoading } from './UsersLoading';
 import { UsersTable } from './UsersTable';
+import { UsersToolbar } from './UsersToolbar';
 import { useUsersQuery } from './useUsersQuery';
 import type { PublicUser } from './userTypes';
 
@@ -21,33 +24,30 @@ export function UsersList({ currentUserId }: UsersListProps) {
     void reload();
   };
 
-  if (loading) return <div className="py-8 text-center">Loading...</div>;
+  const openCreate = () => {
+    setEditing(null);
+    setShowForm(true);
+  };
 
   return (
-    <div>
-      {error ? <p className="mb-4 rounded-md bg-red-50 p-4 text-sm text-red-800">{error}</p> : null}
-      <div className="mb-4">
-        <button
-          type="button"
-          onClick={() => {
-            setEditing(null);
-            setShowForm(true);
-          }}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          + Add user
-        </button>
-      </div>
+    <div className="space-y-6">
+      <UsersToolbar onAdd={openCreate} />
+      {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p> : null}
+      {loading ? <UsersLoading /> : (
+        <>
+          <UserStats users={users} />
+          <UsersTable
+            users={users}
+            currentUserId={currentUserId}
+            onEdit={(user) => {
+              setEditing(user);
+              setShowForm(true);
+            }}
+            onChanged={() => void reload()}
+          />
+        </>
+      )}
       {showForm ? <UserForm user={editing} onClose={closeForm} onSaved={closeForm} /> : null}
-      <UsersTable
-        users={users}
-        currentUserId={currentUserId}
-        onEdit={(user) => {
-          setEditing(user);
-          setShowForm(true);
-        }}
-        onChanged={() => void reload()}
-      />
     </div>
   );
 }

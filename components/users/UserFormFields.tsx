@@ -12,7 +12,7 @@ type UserFormFieldsProps = {
 export function UserFormFields({ user, values, setValues }: UserFormFieldsProps) {
   return (
     <>
-      <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500">Email</label>
       <input
         type="email"
         required
@@ -20,7 +20,7 @@ export function UserFormFields({ user, values, setValues }: UserFormFieldsProps)
         onChange={(event) => setValues({ ...values, email: event.target.value })}
         className="input-field mb-3"
       />
-      <label className="mb-1 block text-sm font-medium text-gray-700">
+      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500">
         {user ? 'New password' : 'Password'}
       </label>
       <input
@@ -32,7 +32,7 @@ export function UserFormFields({ user, values, setValues }: UserFormFieldsProps)
         className="input-field mb-3"
         placeholder={user ? 'Leave blank to keep current' : ''}
       />
-      <label className="mb-1 block text-sm font-medium text-gray-700">Role</label>
+      <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-gray-500">Role</label>
       <select
         value={values.role}
         onChange={(event) => setValues({ ...values, role: event.target.value as UserFormValues['role'] })}
