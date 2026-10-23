@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
-import type { Apartment, ApartmentStatus } from '@prisma/client';
+import type { ApartmentStatus } from '@prisma/client';
 
 export async function createApartment(data: {
   buildingId: number;

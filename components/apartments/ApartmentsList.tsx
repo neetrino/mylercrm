@@ -1,16 +1,14 @@
 'use client';
 
 import { useRef } from 'react';
-import { Building2, FileSpreadsheet, LayoutGrid, List as ListIcon } from 'lucide-react';
 import ApartmentForm from './ApartmentForm';
 import { ApartmentCardItem } from './ApartmentCardItem';
 import { ApartmentsBulkBar } from './ApartmentsBulkBar';
-import { ApartmentsFilters } from './ApartmentsFilters';
 import { ApartmentsFloorView } from './ApartmentsFloorView';
+import { ApartmentsPageHeader } from './ApartmentsPageHeader';
 import { ApartmentsPagination } from './ApartmentsPagination';
 import { ApartmentsPreviewModal } from './ApartmentsPreviewModal';
 import { ApartmentsTable } from './ApartmentsTable';
-import { ViewModeButton } from './ViewModeButton';
 import { useApartmentsBulk } from './useApartmentsBulk';
 import { useApartmentsCatalog } from './useApartmentsCatalog';
 
@@ -90,74 +88,21 @@ export default function ApartmentsList() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-6">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Apartments</h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage and view all apartments
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* View mode toggle */}
-            <div className="inline-flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-              <ViewModeButton
-                active={viewMode === 'grid'}
-                label="Grid view"
-                onClick={() => setViewMode('grid')}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </ViewModeButton>
-              <ViewModeButton
-                active={viewMode === 'list'}
-                label="List view"
-                onClick={() => setViewMode('list')}
-              >
-                <ListIcon className="h-4 w-4" />
-              </ViewModeButton>
-              <ViewModeButton
-                active={viewMode === 'floor'}
-                label="Floor view"
-                onClick={() => setViewMode('floor')}
-              >
-                <Building2 className="h-4 w-4" />
-              </ViewModeButton>
-            </div>
-            {isAdmin && (
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => void handleExportExcel()}
-                  disabled={exportLoading}
-                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
-                  title="Download all apartments as Excel"
-                >
-                  <FileSpreadsheet className="h-4 w-4 shrink-0" />
-                  {exportLoading ? 'Exporting…' : 'Export Excel'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowForm(true)}
-                  className="btn-primary h-10 rounded-xl shadow-sm"
-                >
-                  + Create Apartment
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <ApartmentsFilters
-          searchInput={searchInput}
-          onSearchChange={setSearchInput}
-          buildings={buildings}
-          selectedBuilding={selectedBuilding}
-          onBuildingChange={setSelectedBuilding}
-          selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}
-        />
-      </div>
+      <ApartmentsPageHeader
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        isAdmin={isAdmin}
+        exportLoading={exportLoading}
+        handleExportExcel={handleExportExcel}
+        setShowForm={setShowForm}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        buildings={buildings}
+        selectedBuilding={selectedBuilding}
+        setSelectedBuilding={setSelectedBuilding}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+      />
 
       {error && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
