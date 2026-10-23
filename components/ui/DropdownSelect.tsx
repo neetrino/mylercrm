@@ -124,7 +124,7 @@ function SelectMenu({
       id={id}
       role="listbox"
       style={{ top: box.top, left: box.left, width: box.width }}
-      className={`fixed z-50 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg ${lift}`}
+      className={`dropdown-scroll fixed z-50 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg ${lift}`}
     >
       {options.map((option) => (
         <SelectOption
