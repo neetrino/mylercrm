@@ -40,12 +40,12 @@ export function ApartmentsPageHeader(props: ApartmentsPageHeaderProps) {
 
   return (
     <div className="mb-6">
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Apartments</h1>
           <p className="mt-1 text-sm text-gray-500">Manage and view all apartments</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="inline-flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
             <ViewModeButton active={viewMode === 'grid'} label="Grid view" onClick={() => setViewMode('grid')}>
               <LayoutGrid className="h-4 w-4" />

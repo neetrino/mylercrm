@@ -86,12 +86,12 @@ export default function BuildingsList() {
         </div>
       )}
 
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="text-sm font-medium text-gray-700">
             Filter by District:
           </label>
-          <div className="w-56">
+          <div className="w-full sm:w-56">
             <DropdownSelect
               value={selectedDistrict ? String(selectedDistrict) : ''}
               onChange={(next) => setSelectedDistrict(next ? Number(next) : null)}
@@ -106,13 +106,13 @@ export default function BuildingsList() {
         </div>
         <Link
           href="/admin/buildings/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="w-full rounded-md bg-blue-600 px-4 py-2 text-center text-white hover:bg-blue-700 sm:w-auto"
         >
           + Create Building
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

@@ -34,9 +34,9 @@ export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
           ← Back to list
         </Link>
         
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold text-gray-900 sm:text-3xl">
               Apartment {apartment.apartmentNo}
               {apartment.apartmentName?.trim() ? (
                 <span className="font-semibold text-gray-600"> — {apartment.apartmentName.trim()}</span>
@@ -81,7 +81,7 @@ export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
       </div>
 
       {/* Tabs and Edit Button */}
-      <div className="mb-6 flex items-center justify-between border-b border-gray-200">
+      <div className="mb-6 flex flex-col gap-3 border-b border-gray-200 sm:flex-row sm:items-center sm:justify-between">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}

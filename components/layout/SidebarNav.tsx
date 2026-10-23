@@ -10,14 +10,15 @@ import {
   Users,
 } from 'lucide-react';
 
-type NavItem = {
+export type SidebarNavItem = {
   href: string;
   label: string;
-  iconName: string; // Строковый идентификатор иконки
+  iconName: string;
 };
 
 type SidebarNavProps = {
-  navItems: NavItem[];
+  navItems: SidebarNavItem[];
+  onNavigate?: () => void;
 };
 
 // Маппинг иконок
@@ -29,7 +30,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users,
 };
 
-export default function SidebarNav({ navItems }: SidebarNavProps) {
+export default function SidebarNav({ navItems, onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
@@ -45,6 +46,7 @@ export default function SidebarNav({ navItems }: SidebarNavProps) {
           <Link
             key={item.href}
             href={item.href}
+            onClick={onNavigate}
             className={`group relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
               isActive
                 ? 'bg-blue-50 text-blue-700'

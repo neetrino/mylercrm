@@ -14,7 +14,7 @@ export function ApartmentPreviewModal(props: ApartmentPreviewModalProps) {
       {/* 3D preview modal (iframe) */}
       {previewUrl && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4"
           onClick={() => { setPreviewUrl(null); setPreviewOriginalUrl(null); }}
           role="dialog"
           aria-modal="true"
@@ -37,7 +37,7 @@ export function ApartmentPreviewModal(props: ApartmentPreviewModalProps) {
                 </svg>
               </button>
             </div>
-            <div className="relative min-h-[400px] flex-1 overflow-hidden rounded-b-2xl">
+            <div className="relative min-h-[50dvh] flex-1 overflow-hidden rounded-b-2xl sm:min-h-[400px]">
               <iframe
                 src={previewUrl}
                 title="3D Preview"

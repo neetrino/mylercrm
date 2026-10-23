@@ -13,11 +13,11 @@ export function ApartmentsPagination(props: ApartmentsPaginationProps) {
     <>
       {/* Pagination */}
       {pagination.total_pages > 1 && !allLoaded && (
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-gray-600">
             Page {pagination.page} of {pagination.total_pages}
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
@@ -26,7 +26,7 @@ export function ApartmentsPagination(props: ApartmentsPaginationProps) {
               Previous
             </button>
 
-            <div className="flex space-x-1">
+            <div className="hidden items-center gap-1 sm:flex">
               {(() => {
                 const pages = [];
                 const totalPages = pagination.total_pages;

@@ -12,14 +12,14 @@ export function ApartmentsPreviewModal(props: ApartmentsPreviewModalProps) {
       {/* 3D Preview modal */}
       {previewModalUrl && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4"
           onClick={() => setPreviewModalUrl(null)}
           role="dialog"
           aria-modal="true"
           aria-label="3D preview"
         >
           <div
-            className="relative flex h-[85vh] w-full max-w-4xl flex-col rounded-2xl bg-white shadow-xl"
+            className="relative flex h-[92dvh] w-full max-w-4xl flex-col rounded-2xl bg-white shadow-xl sm:h-[85vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-gray-200 px-4 py-2">
