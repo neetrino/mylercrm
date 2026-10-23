@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { UserForm } from './UserForm';
-import { UserStats } from './UserStats';
 import { UsersLoading } from './UsersLoading';
 import { UsersTable } from './UsersTable';
 import { UsersToolbar } from './UsersToolbar';
@@ -30,12 +29,10 @@ export function UsersList({ currentUserId }: UsersListProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <UsersToolbar onAdd={openCreate} />
-      {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p> : null}
+      {error ? <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-800">{error}</p> : null}
       {loading ? <UsersLoading /> : (
-        <>
-          <UserStats users={users} />
           <UsersTable
             users={users}
             currentUserId={currentUserId}
@@ -45,7 +42,6 @@ export function UsersList({ currentUserId }: UsersListProps) {
             }}
             onChanged={() => void reload()}
           />
-        </>
       )}
       {showForm ? <UserForm user={editing} onClose={closeForm} onSaved={closeForm} /> : null}
     </div>

@@ -34,17 +34,21 @@ export function UserForm({ user, onClose, onSaved }: UserFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4 backdrop-blur-sm">
-      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-gray-900">{user ? 'Edit user' : 'Add user'}</h2>
-        <p className="mb-5 mt-1 text-sm text-gray-500">
-          {user ? 'Update the account. Leave the password blank to keep it.' : 'This login works in the CRM and in 3D.'}
-        </p>
-        {error ? <p className="mb-3 text-sm text-red-700">{error}</p> : null}
-        <UserFormFields user={user} values={values} setValues={setValues} />
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="btn-secondary">Cancel</button>
-          <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Save'}</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-[420px] rounded-xl border border-gray-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+        <div className="px-6 pb-2 pt-6">
+          <h2 className="text-[16px] font-semibold text-gray-950">{user ? 'Edit user' : 'Add user'}</h2>
+          <p className="mt-1 text-[13px] leading-5 text-gray-500">
+            {user ? 'Leave the password blank to keep the current one.' : 'The same login works in the CRM and in 3D.'}
+          </p>
+        </div>
+        <div className="px-6 py-4">
+          {error ? <p className="mb-3 text-[13px] text-red-700">{error}</p> : null}
+          <UserFormFields user={user} values={values} setValues={setValues} />
+        </div>
+        <div className="flex justify-end gap-2 border-t border-gray-100 px-6 py-4">
+          <button type="button" onClick={onClose} className="btn-secondary h-9 rounded-lg px-3.5 text-[13px]">Cancel</button>
+          <button type="submit" disabled={saving} className="btn-primary h-9 rounded-lg px-3.5 text-[13px]">{saving ? 'Saving...' : 'Save'}</button>
         </div>
       </form>
     </div>

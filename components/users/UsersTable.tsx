@@ -11,6 +11,8 @@ type UsersTableProps = {
   onChanged: () => void;
 };
 
+const HEAD = 'px-4 py-2.5 text-left text-[12px] font-medium text-gray-400';
+
 export function UsersTable({ users, currentUserId, onEdit, onChanged }: UsersTableProps) {
   const changeStatus = async (user: PublicUser) => {
     const next = user.status === 'ACTIVE' ? 'DISABLED' : 'ACTIVE';
@@ -24,16 +26,26 @@ export function UsersTable({ users, currentUserId, onEdit, onChanged }: UsersTab
     }
   };
 
-  return (
-    <section className="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
-      <div className="border-b border-gray-100 px-5 py-4">
-        <h2 className="text-sm font-semibold text-gray-900">Directory</h2>
-        <p className="mt-0.5 text-xs text-gray-500">{users.length === 0 ? 'No accounts yet' : `${users.length} people can sign in`}</p>
+  if (users.length === 0) {
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white px-4 py-16 text-center text-[14px] text-gray-500">
+        No users yet.
       </div>
-      {users.length === 0 ? (
-        <p className="px-5 py-12 text-center text-sm text-gray-500">Add the first user to give someone access.</p>
-      ) : (
-        <ul className="divide-y divide-gray-100">
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <table className="min-w-full">
+        <thead>
+          <tr className="border-b border-gray-200">
+            <th className={HEAD}>Email</th>
+            <th className={HEAD}>Role</th>
+            <th className={HEAD}>Status</th>
+            <th className={`${HEAD} text-right`}>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
           {users.map((user) => (
             <UserRow
               key={user.id}
@@ -43,8 +55,8 @@ export function UsersTable({ users, currentUserId, onEdit, onChanged }: UsersTab
               onStatus={() => changeStatus(user)}
             />
           ))}
-        </ul>
-      )}
-    </section>
+        </tbody>
+      </table>
+    </div>
   );
 }
