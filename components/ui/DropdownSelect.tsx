@@ -29,10 +29,12 @@ const FIELD_TRIGGER =
   'flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 text-left text-sm text-gray-900 shadow-sm transition hover:border-blue-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30';
 
 export function DropdownSelect(props: DropdownSelectProps) {
-  const menu = useDropdownMenu(props);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
+  const menu = useDropdownMenu(props, rootRef, menuRef);
 
   return (
-    <div ref={menu.rootRef} className={props.fullWidth === false ? 'relative inline-block' : 'relative w-full'}>
+    <div ref={rootRef} className={props.fullWidth === false ? 'relative inline-block' : 'relative w-full'}>
       <DropdownTrigger
         id={props.id}
         listId={menu.listId}
@@ -47,7 +49,7 @@ export function DropdownSelect(props: DropdownSelectProps) {
       />
       {menu.open && menu.box ? (
         <SelectMenu
-          menuRef={menu.menuRef}
+          menuRef={menuRef}
           id={menu.listId}
           box={menu.box}
           value={props.value}
@@ -59,17 +61,19 @@ export function DropdownSelect(props: DropdownSelectProps) {
   );
 }
 
-function useDropdownMenu({
-  value,
-  onChange,
-  options,
-  align = 'start',
-  fullWidth = true,
-  onOpenChange,
-}: DropdownSelectProps) {
+function useDropdownMenu(
+  {
+    value,
+    onChange,
+    options,
+    align = 'start',
+    fullWidth = true,
+    onOpenChange,
+  }: DropdownSelectProps,
+  rootRef: { current: HTMLDivElement | null },
+  menuRef: { current: HTMLUListElement | null },
+) {
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLUListElement>(null);
   const listId = useId();
   const selected = options.find((option) => option.value === value);
   const box = useMenuPosition(open, rootRef, align, fullWidth);
@@ -83,8 +87,6 @@ function useDropdownMenu({
 
   return {
     open,
-    rootRef,
-    menuRef,
     listId,
     selected,
     box,

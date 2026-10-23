@@ -39,10 +39,12 @@ export function DashboardShell({ navItems, children }: DashboardShellProps) {
 
 function useMobileNav(pathname: string) {
   const [open, setOpen] = useState(false);
+  const [navPath, setNavPath] = useState(pathname);
 
-  useEffect(() => {
+  if (navPath !== pathname) {
+    setNavPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
   useCloseOnEscape(() => setOpen(false), open);
 
