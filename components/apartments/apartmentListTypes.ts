@@ -25,3 +25,6 @@ export type ApartmentListRow = {
   matterLink?: string | null;
   landingToken?: string | null;
 };
+
+export type ApartmentEdit = { apartmentNo?: string; apartmentName?: string | null };
+export type EditedFields = Record<number, ApartmentEdit>;
