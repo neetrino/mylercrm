@@ -29,7 +29,7 @@ export function ApartmentDetailSheet({
         role="dialog"
         aria-modal="true"
         aria-label="Apartment details"
-        className="relative flex h-full w-full max-w-3xl flex-col bg-[var(--brand-ice)] shadow-card"
+        className="relative flex h-full w-full max-w-4xl flex-col bg-[var(--brand-ice)] shadow-card"
       >
         <div className="flex items-center justify-between border-b border-blue-100 bg-white px-5 py-3">
           <p className="text-sm font-semibold text-blue-900">Apartment details</p>
