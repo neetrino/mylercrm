@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { prisma } from '@/lib/prisma';
 import { handleRouteError } from '@/lib/apiErrorResponse';
 
@@ -6,15 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('authorization');
-    const apiToken = process.env.API_TOKEN;
-
-    if (!authHeader || !apiToken) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    if (token !== apiToken) {
+    if (!isAuthorizedBearer(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

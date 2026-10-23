@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { apartmentService } from '@/services/apartment.service';
 import { updateApartmentStatusSchema } from '@/lib/validations';
 import { invalidateCache, cacheKeys, cacheTags } from '@/lib/cache';
@@ -13,22 +14,9 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Проверка сессии для внутреннего использования
     const session = await auth();
-    
-    // Если нет сессии, проверяем Bearer Token для внешнего API
-    if (!session) {
-      const authHeader = request.headers.get('authorization');
-      const apiToken = process.env.API_TOKEN;
-
-      if (!authHeader || !apiToken) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-
-      const token = authHeader.replace('Bearer ', '');
-      if (token !== apiToken) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+    if (!session && !isAuthorizedBearer(request)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id: idParam } = await params;

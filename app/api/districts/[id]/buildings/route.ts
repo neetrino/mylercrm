@@ -1,6 +1,7 @@
 // Этот endpoint поддерживает как внутренний API (Session), так и внешний (Bearer Token)
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { buildingService } from '@/services/building.service';
 import { handleRouteError } from '@/lib/apiErrorResponse';
 
@@ -9,14 +10,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Проверка для внешнего API (Bearer Token) или внутреннего (Session)
+    const bearerOk = isAuthorizedBearer(request);
     const authHeader = request.headers.get('authorization');
-    const apiToken = process.env.API_TOKEN;
 
-    if (authHeader && apiToken) {
-      // Внешний API через Bearer Token
-      const token = authHeader.replace('Bearer ', '');
-      if (token !== apiToken) {
+    if (authHeader) {
+      if (!bearerOk) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
     } else {
@@ -40,7 +38,7 @@ export async function GET(
     const buildings = await buildingService.getAll(districtId);
 
     // Формат для внешнего API (с id и slug для district)
-    if (authHeader && apiToken) {
+    if (bearerOk) {
       const formatted = buildings.map((b) => {
         // Type assertion для доступа к district, который включен через include
         const buildingWithDistrict = b as typeof b & {

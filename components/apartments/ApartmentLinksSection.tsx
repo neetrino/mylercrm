@@ -1,7 +1,7 @@
 'use client';
 
 import FileUpload from './FileUpload';
-import { getEmbedPreviewUrl } from '@/lib/getEmbedPreviewUrl';
+import { getEmbedPreviewUrl, safeHttpUrl } from '@/lib/getEmbedPreviewUrl';
 import type { Dispatch, SetStateAction } from 'react';
 import { normalizeAttachmentsForUpload, truncateUrl, type Apartment } from './apartmentCardModel';
 
@@ -77,9 +77,11 @@ export function ApartmentLinksSection(props: ApartmentLinksSectionProps) {
                     <button
                       type="button"
                       onClick={() => {
-                        if (url) {
-                          setPreviewUrl(getEmbedPreviewUrl(url));
-                          setPreviewOriginalUrl(url);
+                        const preview = url ? getEmbedPreviewUrl(url) : '';
+                        const original = url ? safeHttpUrl(url) : '';
+                        if (preview) {
+                          setPreviewUrl(preview);
+                          setPreviewOriginalUrl(original || null);
                         }
                       }}
                       disabled={!url}

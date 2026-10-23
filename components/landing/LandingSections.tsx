@@ -1,6 +1,6 @@
 'use client';
 
-import { getIframeSrc } from '@/lib/getEmbedPreviewUrl';
+import { getIframeSrc, safeHttpUrl } from '@/lib/getEmbedPreviewUrl';
 import type { Attachment, LandingApartment } from './landingTypes';
 
 type LandingSectionsProps = {
@@ -162,29 +162,34 @@ export function LandingSections(props: LandingSectionsProps) {
         {/* 3D — always full preview block: iframe with 3D content visible immediately (no "External link" fallback) */}
         {threeDSections.map(({ label, url }, threeIdx) => {
           const iframeSrc = url ? getIframeSrc(url) : '';
+          const openUrl = url ? safeHttpUrl(url) : '';
           return (
             <section key={label} id={threeIdx === 0 ? '3d' : undefined} className={threeIdx === 0 ? 'mb-12 scroll-mt-6' : 'mb-12'}>
               <h2 className="mb-3 border-l-4 border-slate-800 pl-4 text-xl font-bold text-slate-900">{label}</h2>
               <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div className="relative min-h-[70vh] w-full bg-slate-100">
-                  <iframe
-                    src={iframeSrc}
-                    title={label}
-                    className="absolute inset-0 h-full w-full border-0"
-                    allowFullScreen
-                    allow="autoplay; fullscreen; web-share; xr-spatial-tracking"
-                  />
+                  {iframeSrc ? (
+                    <iframe
+                      src={iframeSrc}
+                      title={label}
+                      className="absolute inset-0 h-full w-full border-0"
+                      allowFullScreen
+                      allow="autoplay; fullscreen; web-share; xr-spatial-tracking"
+                    />
+                  ) : null}
                 </div>
                 <div className="flex items-center justify-between border-t border-slate-200 bg-white px-4 py-2 text-sm text-slate-500">
                   <span>Interactive 3D</span>
-                  <a
-                    href={url!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-slate-600 underline hover:text-slate-900"
-                  >
-                    Open in new tab
-                  </a>
+                  {openUrl ? (
+                    <a
+                      href={openUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-600 underline hover:text-slate-900"
+                    >
+                      Open in new tab
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </section>

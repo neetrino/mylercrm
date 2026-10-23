@@ -55,4 +55,10 @@ describe('getIframeSrc', () => {
     const u = 'https://example.com/page';
     expect(getIframeSrc(u)).toBe(u);
   });
+
+  it('rejects javascript and data URLs', () => {
+    expect(getIframeSrc('javascript:alert(1)')).toBe('');
+    expect(getEmbedPreviewUrl('javascript:alert(1)')).toBe('');
+    expect(getIframeSrc('data:text/html,<script>alert(1)</script>')).toBe('');
+  });
 });

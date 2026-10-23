@@ -1,4 +1,24 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { getClientIp } from './rateLimit';
+
+describe('getClientIp', () => {
+  it('prefers x-real-ip over a client-supplied forwarded-for prefix', () => {
+    const request = new Request('http://localhost', {
+      headers: {
+        'x-forwarded-for': '1.2.3.4, 5.6.7.8',
+        'x-real-ip': '9.9.9.9',
+      },
+    });
+    expect(getClientIp(request)).toBe('9.9.9.9');
+  });
+
+  it('uses the closest forwarded hop when x-real-ip is absent', () => {
+    const request = new Request('http://localhost', {
+      headers: { 'x-forwarded-for': '1.2.3.4, 5.6.7.8' },
+    });
+    expect(getClientIp(request)).toBe('5.6.7.8');
+  });
+});
 
 describe('checkRateLimit (memory fallback)', () => {
   beforeEach(() => {

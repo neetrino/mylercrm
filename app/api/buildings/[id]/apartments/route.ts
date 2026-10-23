@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isAuthorizedBearer } from '@/lib/apiToken';
 import { buildingService } from '@/services/building.service';
 import { apartmentService } from '@/services/apartment.service';
 import { handleRouteError } from '@/lib/apiErrorResponse';
@@ -8,16 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Проверка Bearer Token для внешнего API
-    const authHeader = request.headers.get('authorization');
-    const apiToken = process.env.API_TOKEN;
-
-    if (!authHeader || !apiToken) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    if (token !== apiToken) {
+    if (!isAuthorizedBearer(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

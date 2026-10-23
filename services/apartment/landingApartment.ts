@@ -1,14 +1,21 @@
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 
-/** Get apartment by public landing token (for share link). Returns null if not found. */
+/** Public share-link payload. Omits buyer contact, payment, and balance fields. */
 export async function getByLandingToken(token: string) {
-  if (!token?.trim()) return null;
-  const apartment = await prisma.apartment.findUnique({
-    where: { landingToken: token.trim() },
+  const trimmed = token?.trim();
+  if (!trimmed) return null;
+  const apartment = await loadPublicLanding(trimmed);
+  return apartment ? toPublicLanding(apartment) : null;
+}
+
+type PublicLandingRecord = NonNullable<Awaited<ReturnType<typeof loadPublicLanding>>>;
+
+async function loadPublicLanding(token: string) {
+  return prisma.apartment.findUnique({
+    where: { landingToken: token },
     select: {
       id: true,
-      buildingId: true,
       apartmentNo: true,
       apartmentName: true,
       apartmentType: true,
@@ -17,35 +24,17 @@ export async function getByLandingToken(token: string) {
       sqm: true,
       priceSqm: true,
       totalPrice: true,
-      totalPaid: true,
-      dealDate: true,
       ownershipName: true,
-      email: true,
-      phone: true,
-      salesType: true,
-      dealDescription: true,
       matterLink: true,
       floorplanDistribution: true,
       exteriorLink: true,
       exteriorLink2: true,
-      buyerAddress: true,
-      otherBuyers: true,
-      paymentSchedule: true,
-      balanceRemaining: true,
       notes: true,
-      updatedAt: true,
       building: {
         select: {
-          id: true,
           name: true,
           slug: true,
-          district: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
+          district: { select: { id: true, name: true, slug: true } },
         },
       },
       attachments: {
@@ -60,26 +49,32 @@ export async function getByLandingToken(token: string) {
       },
     },
   });
-  if (!apartment) return null;
-  const totalPrice =
-    apartment.sqm && apartment.priceSqm
-      ? Number(apartment.sqm) * Number(apartment.priceSqm)
-      : null;
-  const balance =
-    totalPrice && apartment.totalPaid
-      ? totalPrice - Number(apartment.totalPaid)
-      : totalPrice;
+}
+
+function landingTotalPrice(apartment: PublicLandingRecord): number | null {
+  if (apartment.sqm && apartment.priceSqm) {
+    return Number(apartment.sqm) * Number(apartment.priceSqm);
+  }
+  return apartment.totalPrice ? Number(apartment.totalPrice) : null;
+}
+
+function toPublicLanding(apartment: PublicLandingRecord) {
   return {
-    ...apartment,
-    total_price: totalPrice,
-    balance,
+    id: apartment.id,
+    apartmentNo: apartment.apartmentNo,
+    apartmentName: apartment.apartmentName,
+    apartmentType: apartment.apartmentType,
+    floor: apartment.floor,
+    status: apartment.status,
     sqm: apartment.sqm ? Number(apartment.sqm) : null,
     price_sqm: apartment.priceSqm ? Number(apartment.priceSqm) : null,
-    total_paid: apartment.totalPaid ? Number(apartment.totalPaid) : null,
-    buyer_address: apartment.buyerAddress,
-    other_buyers: apartment.otherBuyers,
-    payment_schedule: apartment.paymentSchedule,
-    balance_remaining: apartment.balanceRemaining ? Number(apartment.balanceRemaining) : null,
+    total_price: landingTotalPrice(apartment),
+    ownershipName: apartment.ownershipName,
+    matterLink: apartment.matterLink,
+    floorplanDistribution: apartment.floorplanDistribution,
+    exteriorLink: apartment.exteriorLink,
+    exteriorLink2: apartment.exteriorLink2,
+    notes: apartment.notes,
     attachments: apartment.attachments,
     building_name: apartment.building.name,
     building_slug: apartment.building.slug,
@@ -87,7 +82,6 @@ export async function getByLandingToken(token: string) {
     district_slug: apartment.building.district.slug,
     district_name: apartment.building.district.name,
   };
-
 }
 
 /** Ensure apartment has a landing token; generate if missing. Returns the token. */

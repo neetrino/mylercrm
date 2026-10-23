@@ -4,6 +4,7 @@ import { attachmentService } from '@/services/attachment.service';
 import { FileType } from '@prisma/client';
 import { putObject } from '@/lib/r2';
 import { handleRouteError } from '@/lib/apiErrorResponse';
+import { bufferMatchesMime, extensionForMime } from '@/lib/fileSignature';
 import crypto from 'crypto';
 
 // Максимальный размер файла: 10MB
@@ -16,14 +17,6 @@ const ALLOWED_DOCUMENT_TYPES = [
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ];
-
-// Функция для вычисления MD5 хеша файла
-async function calculateMD5(file: File): Promise<string> {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  const hash = crypto.createHash('md5').update(buffer).digest('hex');
-  return hash;
-}
 
 export async function POST(
   request: NextRequest,
@@ -94,16 +87,16 @@ export async function POST(
       }
     }
 
-    // Вычисляем MD5 хеш файла
-    const md5Hash = await calculateMD5(file);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    if (!bufferMatchesMime(buffer, file.type)) {
+      return NextResponse.json({ error: 'File content does not match its type' }, { status: 400 });
+    }
+    const md5Hash = crypto.createHash('md5').update(buffer).digest('hex');
 
-    // Уникальное имя файла в R2
     const timestamp = Date.now();
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const key = `apartments/${apartmentId}/${fileType.toLowerCase()}/${timestamp}_${sanitizedFileName}`;
-
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const extension = extensionForMime(file.type) ?? 'bin';
+    const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9.-]/g, '_').slice(0, 80);
+    const key = `apartments/${apartmentId}/${fileType.toLowerCase()}/${timestamp}_${baseName}.${extension}`;
 
     const { url: fileUrl } = await putObject(key, buffer, file.type);
 

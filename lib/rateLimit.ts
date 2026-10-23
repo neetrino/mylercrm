@@ -123,16 +123,17 @@ export async function checkRateLimit(
 }
 
 export function getClientIp(request: Request): string {
+  const realIp = request.headers.get('x-real-ip')?.trim();
+  if (realIp) {
+    return realIp;
+  }
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
-    const first = forwarded.split(',')[0]?.trim();
-    if (first) {
-      return first;
+    const hops = forwarded.split(',').map((part) => part.trim()).filter(Boolean);
+    const closest = hops[hops.length - 1];
+    if (closest) {
+      return closest;
     }
-  }
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp?.trim()) {
-    return realIp.trim();
   }
   return '127.0.0.1';
 }

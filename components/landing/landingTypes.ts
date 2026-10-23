@@ -16,9 +16,6 @@ export type LandingApartment = {
   sqm: number | null;
   price_sqm: number | null;
   total_price: number | null;
-  total_paid: number | null;
-  balance: number | null;
-  dealDate: string | null;
   ownershipName: string | null;
   matterLink: string | null;
   floorplanDistribution: string | null;
