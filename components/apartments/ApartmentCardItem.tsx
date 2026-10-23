@@ -92,7 +92,7 @@ export const ApartmentCardItem = memo(
             <h3 className="truncate text-lg font-bold text-gray-900">
               {apt.apartmentNo}
             </h3>
-            <p className="mt-0.5 truncate text-sm text-gray-500">
+            <p className="mt-0.5 line-clamp-2 text-sm leading-5 text-gray-500">
               {apt.building.district.name} — {apt.building.name}
             </p>
             {review ? <InReviewBadge email={review.email} /> : null}
@@ -160,7 +160,7 @@ function CardStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="mt-0.5 truncate text-sm font-semibold tabular-nums text-gray-900" title={value}>
+      <p className="mt-0.5 text-xs font-semibold leading-4 tabular-nums text-gray-900">
         {value}
       </p>
     </div>
