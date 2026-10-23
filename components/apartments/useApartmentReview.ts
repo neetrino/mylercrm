@@ -3,28 +3,37 @@
 import { useEffect, useState } from 'react';
 import { REVIEW_HEARTBEAT_MS } from '@/lib/reviewTiming';
 
-async function sendReview(apartmentId: number, method: 'POST' | 'DELETE'): Promise<string | null> {
-  const response = await fetch(`/api/apartments/${apartmentId}/review`, { method, keepalive: true });
-  if (response.status !== 409) return null;
+async function postReview(apartmentId: number): Promise<{ holding: boolean; blockedBy: string | null }> {
+  const response = await fetch(`/api/apartments/${apartmentId}/review`, { method: 'POST' });
+  if (response.ok) return { holding: true, blockedBy: null };
+  if (response.status !== 409) return { holding: false, blockedBy: null };
   const body = await response.json().catch(() => ({}));
-  return typeof body.reviewer === 'string' ? body.reviewer : 'another user';
+  const reviewer = typeof body.reviewer === 'string' ? body.reviewer : 'another user';
+  return { holding: false, blockedBy: reviewer };
 }
 
-export function useApartmentReview(apartmentId: number): { blockedBy: string | null } {
+function releaseReview(apartmentId: number): void {
+  void fetch(`/api/apartments/${apartmentId}/review`, { method: 'DELETE', keepalive: true });
+}
+
+export function useApartmentReview(apartmentId: number): { blockedBy: string | null; holding: boolean } {
   const [blockedBy, setBlockedBy] = useState<string | null>(null);
+  const [holding, setHolding] = useState(false);
 
   useEffect(() => {
     let stopped = false;
     const beat = async () => {
-      const reviewer = await sendReview(apartmentId, 'POST');
-      if (!stopped) setBlockedBy(reviewer);
+      const result = await postReview(apartmentId);
+      if (stopped) return;
+      setBlockedBy(result.blockedBy);
+      setHolding(result.holding);
     };
     void beat();
     const timer = setInterval(() => {
       void beat();
     }, REVIEW_HEARTBEAT_MS);
     const release = () => {
-      void sendReview(apartmentId, 'DELETE');
+      releaseReview(apartmentId);
     };
     window.addEventListener('pagehide', release);
     return () => {
@@ -35,5 +44,5 @@ export function useApartmentReview(apartmentId: number): { blockedBy: string | n
     };
   }, [apartmentId]);
 
-  return { blockedBy };
+  return { blockedBy, holding };
 }

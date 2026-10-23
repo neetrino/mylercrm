@@ -17,9 +17,10 @@ import { activeReview, isLockedByOther } from '@/lib/inReview';
 interface ApartmentCardProps {
   apartmentId: number;
   currentUserId: string;
+  currentUserEmail: string;
 }
 
-export default function ApartmentCard({ apartmentId, currentUserId }: ApartmentCardProps) {
+export default function ApartmentCard({ apartmentId, currentUserId, currentUserEmail }: ApartmentCardProps) {
   const router = useRouter();
   const [apartment, setApartment] = useState<Apartment | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ export default function ApartmentCard({ apartmentId, currentUserId }: ApartmentC
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewOriginalUrl, setPreviewOriginalUrl] = useState<string | null>(null);
   const [landingCopied, setLandingCopied] = useState(false);
-  const { blockedBy } = useApartmentReview(apartmentId);
+  const { blockedBy, holding } = useApartmentReview(apartmentId);
 
   useEffect(() => {
     // При загрузке страницы всегда обновляем без кэша для получения актуальных данных
@@ -225,8 +226,13 @@ export default function ApartmentCard({ apartmentId, currentUserId }: ApartmentC
         setEditing={setEditing}
         handleSave={handleSave}
         handleStatusChange={handleStatusChange}
-        reviewEmail={blockedBy ?? activeReview(apartment.in_review)?.email ?? null}
-        statusLocked={Boolean(blockedBy) || isLockedByOther(activeReview(apartment.in_review), currentUserId)}
+        reviewEmail={
+          blockedBy
+            ?? (holding ? currentUserEmail : null)
+            ?? activeReview(apartment.in_review)?.email
+            ?? null
+        }
+        statusLocked={Boolean(blockedBy) || (!holding && isLockedByOther(activeReview(apartment.in_review), currentUserId))}
       />
 
       {/* Tab Content */}
