@@ -11,7 +11,6 @@ type DashboardTopBarProps = {
 export function DashboardTopBar({ onOpen }: DashboardTopBarProps) {
   return (
     <header className="sticky top-0 z-30 bg-blue-950 text-white lg:hidden">
-      <div className="brand-stripe h-1" />
       <div className="flex h-14 items-center gap-3 px-4">
         <button
           type="button"

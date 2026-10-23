@@ -39,7 +39,6 @@ export function DashboardShell({ navItems, email, role, children }: DashboardShe
         onClose={() => setOpen(false)}
       />
       <div className="min-w-0 lg:pl-64">
-        <div className="brand-stripe hidden h-1 lg:block" />
         <main className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">{children}</main>
       </div>
     </div>
