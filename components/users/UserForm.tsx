@@ -36,7 +36,8 @@ export function UserForm({ user, onClose, onSaved }: UserFormProps) {
 
   return (
     <UserFormModal onClose={onClose}>
-      <form onSubmit={handleSubmit} className="w-full max-w-[420px] rounded-xl border border-gray-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
+      <form onSubmit={handleSubmit} className="card w-full max-w-[420px] overflow-hidden">
+        <div className="brand-stripe h-1" />
         <div className="px-6 pb-2 pt-6">
           <h2 className="text-[16px] font-semibold text-gray-950">{user ? 'Edit user' : 'Add user'}</h2>
           <p className="mt-1 text-[13px] leading-5 text-gray-500">

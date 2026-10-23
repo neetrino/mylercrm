@@ -249,7 +249,7 @@ export default function BuildingForm({
   }
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-blue-950/50 p-4">
       <div className="flex min-h-full items-center justify-center">
         {formContent}
       </div>

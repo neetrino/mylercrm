@@ -74,8 +74,8 @@ export default function ApartmentForm({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="max-h-[92dvh] w-full max-w-md overflow-y-auto rounded-lg bg-white p-5 shadow-lg sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-blue-950/50 p-4">
+      <div className="card max-h-[92dvh] w-full max-w-md overflow-y-auto p-5 sm:p-6">
         <h2 className="mb-4 text-xl font-bold">Create Apartment</h2>
 
         {error && (

@@ -19,7 +19,7 @@ export function UserFormModal({ children, onClose }: UserFormModalProps) {
   }, []);
 
   return createPortal(
-    <div className="fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-[200] flex h-dvh w-screen items-center justify-center bg-blue-950/55 p-4">
       {children}
     </div>,
     document.body,
