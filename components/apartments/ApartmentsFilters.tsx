@@ -93,7 +93,7 @@ function SearchField({
           placeholder="No., building, district, owner..."
           onChange={(event) => onChange(event.target.value)}
           aria-label="Search apartments"
-          className="h-10 w-full rounded-xl border border-gray-200 bg-white pl-9 pr-9 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 [&::-webkit-search-cancel-button]:appearance-none"
+          className="h-10 w-full appearance-none rounded-xl border border-gray-200 bg-white pl-9 pr-9 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/20 [&::-webkit-search-cancel-button]:hidden"
         />
         {value ? (
           <button
