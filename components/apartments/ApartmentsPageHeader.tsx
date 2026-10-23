@@ -42,7 +42,8 @@ export function ApartmentsPageHeader(props: ApartmentsPageHeaderProps) {
     <div className="mb-6">
       <div className="mb-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Apartments</h1>
+          <p className="page-kicker">Portfolio</p>
+          <h1 className="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">Apartments</h1>
           <p className="mt-1 text-sm text-gray-500">Manage and view all apartments</p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

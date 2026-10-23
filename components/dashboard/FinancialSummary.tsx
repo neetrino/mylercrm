@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import type { LegendPayload } from 'recharts/types/component/DefaultLegendContent';
 import { formatAmd } from '@/lib/formatAmd';
+import { BRAND } from '@/lib/brandColors';
 
 type FinancialData = {
   sold: {
@@ -71,10 +72,10 @@ export default function FinancialSummary() {
 
   // Данные для круговой диаграммы
   const pieData = [
-    { name: 'Sold', value: totalSold, color: '#3b82f6' },
-    { name: 'Available', value: data.notSold.available, color: '#10b981' },
-    { name: 'Reserved', value: data.notSold.reserved, color: '#f59e0b' },
-    { name: 'Upcoming', value: data.notSold.upcoming, color: '#9ca3af' },
+    { name: 'Sold', value: totalSold, color: BRAND.teal },
+    { name: 'Available', value: data.notSold.available, color: BRAND.pineBright },
+    { name: 'Reserved', value: data.notSold.reserved, color: BRAND.sun },
+    { name: 'Upcoming', value: data.notSold.upcoming, color: BRAND.ice },
   ].filter(item => item.value > 0);
 
   const COLORS = pieData.map(item => item.color);
@@ -192,7 +193,7 @@ export default function FinancialSummary() {
                   cy="45%"
                   labelLine={false}
                   outerRadius={90}
-                  fill="#8884d8"
+                  fill={BRAND.teal}
                   dataKey="value"
                   label={(props: { percent?: number }) => {
                     const { percent } = props;
@@ -209,8 +210,8 @@ export default function FinancialSummary() {
                 <Tooltip 
                   formatter={(value: number | undefined) => value ? formatAmd(value) : ''}
                   contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
+                    backgroundColor: BRAND.surface,
+                    border: `1px solid ${BRAND.grid}`,
                     borderRadius: '0.5rem',
                   }}
                 />

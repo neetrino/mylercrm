@@ -26,7 +26,7 @@ type DropdownSelectProps = {
 };
 
 const FIELD_TRIGGER =
-  'flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white px-3 text-left text-sm text-gray-900 transition hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30';
+  'flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 text-left text-sm text-gray-900 shadow-sm transition hover:border-blue-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30';
 
 export function DropdownSelect(props: DropdownSelectProps) {
   const menu = useDropdownMenu(props);

@@ -72,7 +72,7 @@ export function ApartmentsTable(props: ApartmentsTableProps) {
         <div className="card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-blue-50">
                 <tr>
                   <SortableHeader field="apartmentNo" label="No" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">

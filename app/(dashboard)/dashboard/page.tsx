@@ -12,7 +12,8 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+        <p className="page-kicker">Myler</p>
+        <h1 className="mt-1 text-3xl font-bold text-gray-900">Analytics</h1>
         <p className="mt-2 text-sm text-gray-500">
           Comprehensive overview of apartments, sales, and financial statistics
         </p>

@@ -21,7 +21,6 @@ type SidebarNavProps = {
   onNavigate?: () => void;
 };
 
-// Маппинг иконок
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Home,
   LayoutDashboard,
@@ -34,36 +33,34 @@ export default function SidebarNav({ navItems, onNavigate }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex-1 space-y-1 px-3 py-4">
+    <nav className="flex-1 space-y-1 px-3 py-2">
       {navItems.map((item) => {
         const Icon = iconMap[item.iconName];
         if (!Icon) return null;
-        
-        const isActive = pathname === item.href || 
+
+        const isActive = pathname === item.href ||
           (item.href !== '/dashboard' && pathname.startsWith(item.href));
-        
+
         return (
           <Link
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`group relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+            className={`group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
               isActive
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                ? 'bg-white/10 text-white shadow-sm'
+                : 'text-white/70 hover:bg-white/10 hover:text-white'
             }`}
           >
             {isActive && (
-              <span className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-blue-600" />
+              <span className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-yellow-300" />
             )}
             <Icon
               className={`mr-3 h-5 w-5 flex-shrink-0 transition-colors ${
-                isActive
-                  ? 'text-blue-600'
-                  : 'text-gray-400 group-hover:text-gray-600'
+                isActive ? 'text-yellow-300' : 'text-white/45 group-hover:text-white/80'
               }`}
             />
-            <span className="relative">{item.label}</span>
+            <span>{item.label}</span>
           </Link>
         );
       })}

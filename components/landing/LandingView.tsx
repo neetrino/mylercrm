@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import ImageLightbox from '@/components/ui/ImageLightbox';
 import { formatAmd } from '@/lib/formatAmd';
+import { BRAND_LOGO_URL } from '@/components/layout/brandLogo';
 import { LandingSections } from './LandingSections';
 import type { LandingApartment } from './landingTypes';
 
@@ -103,11 +105,23 @@ export default function LandingView({ token }: { token: string }) {
   ].filter(Boolean) as { icon: string; label: string; value: string }[];
 
   return (
-    <div className="min-h-screen bg-[#f8f9fc]">
+    <div className="min-h-screen">
       <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Hero — modern strip */}
-        <header className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-800 to-slate-900 px-6 py-10 shadow-xl sm:px-10 lg:py-12">
+        <header className="relative mb-8 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-800 via-slate-800 to-slate-950 px-6 py-10 shadow-card sm:px-10 lg:py-12">
+          <div className="pointer-events-none absolute -right-6 -top-10 h-40 w-40 rounded-full bg-yellow-300/40 blur-2xl" />
           <div className="relative z-10">
+            <div className="mb-6 inline-flex rounded-2xl bg-white px-3 py-2 shadow-sm">
+              <Image
+                src={BRAND_LOGO_URL}
+                alt="Myler"
+                width={150}
+                height={52}
+                className="h-10 w-auto object-contain"
+                priority
+                unoptimized
+              />
+            </div>
             <p className="text-sm font-medium uppercase tracking-widest text-slate-300">
               {apartment.district_name} · {apartment.building_name}
             </p>
@@ -131,7 +145,7 @@ export default function LandingView({ token }: { token: string }) {
         </header>
 
         {/* Section nav — horizontal anchor links */}
-        <nav className="mb-8 flex flex-wrap gap-2 border-b border-slate-200/80 bg-white/80 py-3 px-4 rounded-xl backdrop-blur sm:gap-3 sm:px-5">
+        <nav className="mb-8 flex flex-wrap gap-2 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 shadow-card backdrop-blur sm:gap-3 sm:px-5">
           <button type="button" onClick={() => scrollTo('information')} className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900">
             Information
           </button>

@@ -55,7 +55,7 @@ export function ApartmentsFloorView({
                   : key;
                 return (
                   <div key={key} className="card overflow-hidden">
-                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-white px-6 py-4">
                       <h2 className="text-lg font-semibold text-gray-900">{buildingLabel}</h2>
                       {isAdmin && firstApt ? (
                         <Link

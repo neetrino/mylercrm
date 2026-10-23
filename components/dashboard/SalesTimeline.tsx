@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { formatAmd, formatAmdNumber } from '@/lib/formatAmd';
+import { BRAND } from '@/lib/brandColors';
 
 type TimelineData = {
   month: string;
@@ -89,10 +90,10 @@ export default function SalesTimeline() {
             <h3 className="mb-4 text-sm font-medium text-gray-700">Number of Deals</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke={BRAND.grid} />
                 <XAxis 
                   dataKey="month" 
-                  stroke="#6b7280"
+                  stroke={BRAND.axis}
                   fontSize={11}
                   tickLine={false}
                   angle={angle}
@@ -102,20 +103,20 @@ export default function SalesTimeline() {
                   tickMargin={tickMargin}
                 />
                 <YAxis 
-                  stroke="#6b7280"
+                  stroke={BRAND.axis}
                   fontSize={12}
                   tickLine={false}
                 />
                 <Tooltip 
                   contentStyle={{
                     backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
+                    border: `1px solid ${BRAND.grid}`,
                     borderRadius: '0.5rem',
                   }}
                 />
                 <Bar 
                   dataKey="Deals Count" 
-                  fill="#3b82f6" 
+                  fill={BRAND.teal} 
                   radius={[8, 8, 0, 0]}
                 />
               </BarChart>
@@ -127,10 +128,10 @@ export default function SalesTimeline() {
             <h3 className="mb-4 text-sm font-medium text-gray-700">Sales Amount</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <CartesianGrid strokeDasharray="3 3" stroke={BRAND.grid} />
                 <XAxis 
                   dataKey="month" 
-                  stroke="#6b7280"
+                  stroke={BRAND.axis}
                   fontSize={11}
                   tickLine={false}
                   angle={angle}
@@ -140,7 +141,7 @@ export default function SalesTimeline() {
                   tickMargin={tickMargin}
                 />
                 <YAxis 
-                  stroke="#6b7280"
+                  stroke={BRAND.axis}
                   fontSize={12}
                   tickLine={false}
                   tickFormatter={(v: number) => formatAmdNumber(v)}
@@ -151,16 +152,16 @@ export default function SalesTimeline() {
                   }
                   contentStyle={{
                     backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
+                    border: `1px solid ${BRAND.grid}`,
                     borderRadius: '0.5rem',
                   }}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="Amount (AMD)" 
-                  stroke="#10b981" 
+                  stroke={BRAND.pine}
                   strokeWidth={3}
-                  dot={{ fill: '#10b981', r: 5 }}
+                  dot={{ fill: BRAND.pine, r: 5 }}
                   activeDot={{ r: 7 }}
                 />
               </LineChart>
@@ -170,7 +171,7 @@ export default function SalesTimeline() {
           {/* Data table */}
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-blue-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                     Month

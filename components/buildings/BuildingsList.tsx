@@ -106,7 +106,7 @@ export default function BuildingsList() {
         </div>
         <Link
           href="/admin/buildings/new"
-          className="w-full rounded-md bg-blue-600 px-4 py-2 text-center text-white hover:bg-blue-700 sm:w-auto"
+          className="btn-primary w-full text-center sm:w-auto"
         >
           + Create Building
         </Link>
@@ -114,7 +114,7 @@ export default function BuildingsList() {
 
       <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow">
         <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+          <thead className="bg-blue-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                 ID
