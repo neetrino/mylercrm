@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Real Estate CRM система для управления комплексом недвижимости",
   "private": true,
-  "packageManager": "pnpm@11.13.0",
+  "packageManager": "pnpm@11.28.8",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
