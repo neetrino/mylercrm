@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import type { Building, District } from '@prisma/client';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
+import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 
 type BuildingWithDistrict = Building & {
   district: District;
@@ -85,20 +87,18 @@ export default function ApartmentForm({
             <label className="block text-sm font-medium text-gray-700">
               Building *
             </label>
-            <select
-              value={formData.buildingId}
-              onChange={(e) =>
-                setFormData({ ...formData, buildingId: parseInt(e.target.value) })
-              }
-              required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            >
-              {buildings.map((building) => (
-                <option key={building.id} value={building.id}>
-                  {building.district.name} - {building.name}
-                </option>
-              ))}
-            </select>
+            <div className="mt-1">
+              <DropdownSelect
+                value={String(formData.buildingId || '')}
+                onChange={(next) => setFormData({ ...formData, buildingId: Number(next) })}
+                options={buildings.map((building) => ({
+                  value: String(building.id),
+                  label: `${building.district.name} - ${building.name}`,
+                }))}
+                placeholder="Building"
+                ariaLabel="Building"
+              />
+            </div>
           </div>
 
           <div className="mb-4">
@@ -214,19 +214,15 @@ export default function ApartmentForm({
             <label className="block text-sm font-medium text-gray-700">
               Status *
             </label>
-            <select
-              value={formData.status}
-              onChange={(e) =>
-                setFormData({ ...formData, status: e.target.value })
-              }
-              required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-            >
-              <option value="UPCOMING">Upcoming</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="RESERVED">Reserved</option>
-              <option value="SOLD">Sold</option>
-            </select>
+            <div className="mt-1">
+              <DropdownSelect
+                value={formData.status}
+                onChange={(status) => setFormData({ ...formData, status })}
+                options={APARTMENT_STATUS_OPTIONS}
+                placeholder="Status"
+                ariaLabel="Apartment status"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end space-x-3">

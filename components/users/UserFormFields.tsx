@@ -1,6 +1,7 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import type { PublicUser, UserFormValues } from './userTypes';
 
 type UserFormFieldsProps = {
@@ -34,14 +35,18 @@ export function UserFormFields({ user, values, setValues }: UserFormFieldsProps)
         placeholder={user ? 'Leave blank to keep current' : 'At least 8 characters'}
       />
       <label className="mb-1.5 block text-[13px] font-medium text-gray-700">Role</label>
-      <select
-        value={values.role}
-        onChange={(event) => setValues({ ...values, role: event.target.value as UserFormValues['role'] })}
-        className="input-field mb-4"
-      >
-        <option value="SALES">Sales</option>
-        <option value="ADMIN">Admin</option>
-      </select>
+      <div className="mb-4">
+        <DropdownSelect
+          value={values.role}
+          onChange={(role) => setValues({ ...values, role: role as UserFormValues['role'] })}
+          options={[
+            { value: 'SALES', label: 'Sales' },
+            { value: 'ADMIN', label: 'Admin' },
+          ]}
+          placeholder="Role"
+          ariaLabel="User role"
+        />
+      </div>
     </>
   );
 }

@@ -96,21 +96,6 @@ export function getSalesTypeLabel(type: string) {
     }
 }
 
-export function getSalesTypeValue(label: string) {
-    switch (label) {
-      case 'Unsold':
-        return 'UNSOLD';
-      case 'Mortgage':
-        return 'MORTGAGE';
-      case 'Cash':
-        return 'CASH';
-      case 'Time-based':
-        return 'TIMEBASED';
-      default:
-        return 'UNSOLD';
-    }
-}
-
 export function getStatusColor(status: string) {
   switch (status?.toUpperCase()) {
     case 'UPCOMING':

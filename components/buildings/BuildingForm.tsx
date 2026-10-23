@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { District } from '@prisma/client';
 import { BuildingFloorPlans } from './BuildingFloorPlans';
 import type { BuildingWithDistrict } from './buildingFormTypes';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 
 type BuildingFormProps = {
   building: BuildingWithDistrict | null;
@@ -133,19 +134,14 @@ export default function BuildingForm({
             <label className="mb-1 block text-sm font-medium text-gray-700">
               District *
             </label>
-            <select
-              value={districtId}
-              onChange={(e) => setDistrictId(parseInt(e.target.value))}
-              required
+            <DropdownSelect
+              value={String(districtId || '')}
+              onChange={(next) => setDistrictId(Number(next))}
+              options={districts.map((district) => ({ value: String(district.id), label: district.name }))}
+              placeholder="District"
+              ariaLabel="District"
               disabled={!!building}
-              className="input-field disabled:bg-gray-100"
-            >
-              {districts.map((district) => (
-                <option key={district.id} value={district.id}>
-                  {district.name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
 
           <div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { Building, District } from '@prisma/client';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 
 type BuildingWithDistrict = Building & {
   district: District;
@@ -90,22 +91,18 @@ export default function BuildingsList() {
           <label className="text-sm font-medium text-gray-700">
             Filter by District:
           </label>
-          <select
-            value={selectedDistrict || ''}
-            onChange={(e) =>
-              setSelectedDistrict(
-                e.target.value ? parseInt(e.target.value) : null
-              )
-            }
-            className="rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-          >
-            <option value="">All Districts</option>
-            {districts.map((district) => (
-              <option key={district.id} value={district.id}>
-                {district.name}
-              </option>
-            ))}
-          </select>
+          <div className="w-56">
+            <DropdownSelect
+              value={selectedDistrict ? String(selectedDistrict) : ''}
+              onChange={(next) => setSelectedDistrict(next ? Number(next) : null)}
+              options={[
+                { value: '', label: 'All Districts' },
+                ...districts.map((district) => ({ value: String(district.id), label: district.name })),
+              ]}
+              placeholder="All Districts"
+              ariaLabel="Filter by district"
+            />
+          </div>
         </div>
         <Link
           href="/admin/buildings/new"

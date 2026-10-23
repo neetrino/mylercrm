@@ -2,7 +2,15 @@
 
 import { formatAmd } from '@/lib/formatAmd';
 import type { Dispatch, SetStateAction } from 'react';
-import { getSalesTypeLabel, getSalesTypeValue, type Apartment } from './apartmentCardModel';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
+import { getSalesTypeLabel, type Apartment } from './apartmentCardModel';
+
+const SALES_TYPE_OPTIONS = [
+  { value: 'UNSOLD', label: 'Unsold' },
+  { value: 'MORTGAGE', label: 'Mortgage' },
+  { value: 'CASH', label: 'Cash' },
+  { value: 'TIMEBASED', label: 'Time-based' },
+];
 
 type ApartmentOverviewSectionProps = {
   apartment: Apartment;
@@ -163,21 +171,13 @@ export function ApartmentOverviewSection(props: ApartmentOverviewSectionProps) {
                   Sales Type
                 </label>
                 {editing ? (
-                  <select
-                    value={getSalesTypeLabel(apartment.salesType)}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        salesType: getSalesTypeValue(e.target.value),
-                      })
-                    }
-                    className="input-field"
-                  >
-                    <option>Unsold</option>
-                    <option>Mortgage</option>
-                    <option>Cash</option>
-                    <option>Time-based</option>
-                  </select>
+                  <DropdownSelect
+                    value={(formData.salesType ?? apartment.salesType ?? 'UNSOLD').toUpperCase()}
+                    onChange={(salesType) => setFormData({ ...formData, salesType })}
+                    options={SALES_TYPE_OPTIONS}
+                    placeholder="Sales type"
+                    ariaLabel="Sales type"
+                  />
                 ) : (
                   <p className="text-base font-medium text-gray-900">
                     {getSalesTypeLabel(apartment.salesType)}

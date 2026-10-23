@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import type { Dispatch, SetStateAction } from 'react';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { getStatusColor, type Apartment } from './apartmentCardModel';
+import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 import { InReviewBadge } from './InReviewBadge';
 
 type ApartmentCardChromeProps = {
@@ -63,17 +65,17 @@ export function ApartmentCardChrome(props: ApartmentCardChromeProps) {
               )}
             </button>
             {reviewEmail ? <InReviewBadge email={reviewEmail} /> : null}
-            <select
+            <DropdownSelect
               value={apartment.status}
               disabled={statusLocked}
-              onChange={(e) => handleStatusChange(e.target.value)}
-              className={`select-chevron-card badge border-2 ${getStatusColor(apartment.status)} cursor-pointer text-lg font-bold appearance-none bg-right transition-all duration-200 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60`}
-            >
-              <option value="UPCOMING">Upcoming</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="RESERVED">Reserved</option>
-              <option value="SOLD">Sold</option>
-            </select>
+              onChange={handleStatusChange}
+              options={APARTMENT_STATUS_OPTIONS}
+              placeholder="Status"
+              ariaLabel="Apartment status"
+              align="end"
+              fullWidth={false}
+              triggerClassName={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border-2 px-3 py-2 text-sm font-semibold transition hover:shadow-md ${getStatusColor(apartment.status)}`}
+            />
           </div>
         </div>
       </div>

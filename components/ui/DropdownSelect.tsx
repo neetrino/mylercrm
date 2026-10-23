@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, ChevronDown } from 'lucide-react';
+import { useDismissOnOutside, useMenuPosition, type MenuBox } from './dropdownSelectPosition';
 
 export type DropdownOption = {
   value: string;
@@ -24,34 +25,46 @@ type DropdownSelectProps = {
   onOpenChange?: (open: boolean) => void;
 };
 
-type MenuAlign = 'start' | 'end';
-
-type MenuBox = {
-  top: number;
-  left: number;
-  width: number;
-  openUp: boolean;
-};
-
 const FIELD_TRIGGER =
-  'flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 text-left text-sm text-gray-900 shadow-sm transition hover:border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20';
+  'flex h-10 w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white px-3 text-left text-sm text-gray-900 transition hover:border-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30';
 
-const MENU_OFFSET = 6;
-const VIEWPORT_GUTTER = 8;
-const COMPACT_MENU_WIDTH = 176;
-const OPEN_UP_THRESHOLD = 220;
+export function DropdownSelect(props: DropdownSelectProps) {
+  const menu = useDropdownMenu(props);
 
-export function DropdownSelect({
-  id,
+  return (
+    <div ref={menu.rootRef} className={props.fullWidth === false ? 'relative inline-block' : 'relative w-full'}>
+      <DropdownTrigger
+        id={props.id}
+        listId={menu.listId}
+        open={menu.open}
+        disabled={props.disabled ?? false}
+        ariaLabel={props.ariaLabel}
+        label={menu.selected?.label ?? props.placeholder}
+        muted={!menu.selected}
+        dotClassName={props.triggerClassName ? undefined : menu.selected?.dotClassName}
+        triggerClassName={props.triggerClassName}
+        onToggle={() => menu.toggle(props.disabled ?? false)}
+      />
+      {menu.open && menu.box ? (
+        <SelectMenu
+          menuRef={menu.menuRef}
+          id={menu.listId}
+          box={menu.box}
+          value={props.value}
+          options={props.options}
+          onSelect={menu.choose}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function useDropdownMenu({
   value,
   onChange,
   options,
-  placeholder,
-  ariaLabel,
-  triggerClassName,
   align = 'start',
   fullWidth = true,
-  disabled = false,
   onOpenChange,
 }: DropdownSelectProps) {
   const [open, setOpen] = useState(false);
@@ -68,41 +81,69 @@ export function DropdownSelect({
 
   useDismissOnOutside(open, rootRef, menuRef, () => setOpenState(false));
 
+  return {
+    open,
+    rootRef,
+    menuRef,
+    listId,
+    selected,
+    box,
+    toggle: (disabled: boolean) => {
+      if (!disabled) setOpenState(!open);
+    },
+    choose: (next: string) => {
+      onChange(next);
+      setOpenState(false);
+    },
+  };
+}
+
+function DropdownTrigger({
+  id,
+  listId,
+  open,
+  disabled,
+  ariaLabel,
+  label,
+  muted,
+  dotClassName,
+  triggerClassName,
+  onToggle,
+}: {
+  id?: string;
+  listId: string;
+  open: boolean;
+  disabled: boolean;
+  ariaLabel: string;
+  label: string;
+  muted: boolean;
+  dotClassName?: string;
+  triggerClassName?: string;
+  onToggle: () => void;
+}) {
+  const trigger = `${triggerClassName ?? FIELD_TRIGGER}${disabled ? ' cursor-not-allowed opacity-60' : ''}`;
+
   return (
-    <div ref={rootRef} className={fullWidth ? 'relative w-full' : 'relative inline-block'}>
-      <button
-        id={id}
-        type="button"
-        aria-label={ariaLabel}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls={listId}
-        disabled={disabled}
-        onClick={() => {
-          if (!disabled) setOpenState(!open);
-        }}
-        className={`${triggerClassName ?? FIELD_TRIGGER}${disabled ? ' cursor-not-allowed opacity-60' : ''}`}
-      >
-        <span className="truncate">{selected?.label ?? placeholder}</span>
-        <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 opacity-70 transition ${open ? 'rotate-180' : ''}`}
-          aria-hidden
-        />
-      </button>
-      {open && box ? (
-        <SelectMenu
-          menuRef={menuRef}
-          id={listId}
-          box={box}
-          value={value}
-          options={options}
-          onSelect={(next) => {
-            onChange(next);
-            setOpenState(false);
-          }}
-        />
-      ) : null}
-    </div>
+    <button
+      id={id}
+      type="button"
+      aria-label={ariaLabel}
+      aria-haspopup="listbox"
+      aria-expanded={open}
+      aria-controls={listId}
+      disabled={disabled}
+      onClick={onToggle}
+      className={trigger}
+    >
+      <span className="flex min-w-0 items-center gap-2">
+        {dotClassName ? <span className={`h-2 w-2 shrink-0 rounded-full ${dotClassName}`} /> : null}
+        <span className={`truncate ${muted ? 'text-gray-400' : ''}`}>{label}</span>
+      </span>
+      <ChevronDown
+        className={`h-3.5 w-3.5 shrink-0 opacity-70 transition ${open ? 'rotate-180' : ''}`}
+        aria-hidden
+      />
+    </button>
   );
 }
 
@@ -129,7 +170,7 @@ function SelectMenu({
       id={id}
       role="listbox"
       style={{ top: box.top, left: box.left, width: box.width }}
-      className={`dropdown-scroll fixed z-50 max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg ${lift}`}
+      className={`dropdown-scroll fixed z-[260] max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white p-1.5 shadow-[0_16px_40px_rgba(15,23,42,0.14)] ${lift}`}
     >
       {options.map((option) => (
         <SelectOption
@@ -154,7 +195,7 @@ function SelectOption({
   onSelect: (value: string) => void;
 }) {
   const row = selected
-    ? 'bg-blue-50 font-medium text-blue-700'
+    ? 'bg-gray-100 font-medium text-gray-950'
     : 'text-gray-700 hover:bg-gray-50';
 
   return (
@@ -176,79 +217,4 @@ function SelectOption({
       </button>
     </li>
   );
-}
-
-function useMenuPosition(
-  open: boolean,
-  anchorRef: { current: HTMLDivElement | null },
-  align: MenuAlign,
-  fullWidth: boolean,
-): MenuBox | null {
-  const [box, setBox] = useState<MenuBox | null>(null);
-
-  useLayoutEffect(() => {
-    if (!open) return undefined;
-    const place = () => {
-      const anchor = anchorRef.current;
-      if (!anchor) return;
-      setBox(measureMenu(anchor, align, fullWidth));
-    };
-    place();
-    window.addEventListener('resize', place);
-    window.addEventListener('scroll', place, true);
-    return () => {
-      window.removeEventListener('resize', place);
-      window.removeEventListener('scroll', place, true);
-    };
-  }, [open, align, fullWidth, anchorRef]);
-
-  return open ? box : null;
-}
-
-function measureMenu(anchor: HTMLDivElement, align: MenuAlign, fullWidth: boolean): MenuBox {
-  const rect = anchor.getBoundingClientRect();
-  const width = fullWidth ? rect.width : COMPACT_MENU_WIDTH;
-  const rawLeft = align === 'end' ? rect.right - width : rect.left;
-  const maxLeft = window.innerWidth - width - VIEWPORT_GUTTER;
-  const spaceBelow = window.innerHeight - rect.bottom;
-  const openUp = spaceBelow < OPEN_UP_THRESHOLD && rect.top > spaceBelow;
-
-  return {
-    top: openUp ? rect.top - MENU_OFFSET : rect.bottom + MENU_OFFSET,
-    left: Math.max(VIEWPORT_GUTTER, Math.min(rawLeft, maxLeft)),
-    width,
-    openUp,
-  };
-}
-
-function useDismissOnOutside(
-  open: boolean,
-  rootRef: { current: HTMLElement | null },
-  menuRef: { current: HTMLElement | null },
-  onClose: () => void,
-) {
-  const onCloseRef = useRef(onClose);
-
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onPointer = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (rootRef.current?.contains(target)) return;
-      if (menuRef.current?.contains(target)) return;
-      onCloseRef.current();
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCloseRef.current();
-    };
-    document.addEventListener('click', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('click', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open, rootRef, menuRef]);
 }
