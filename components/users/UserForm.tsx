@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { saveUser } from './userFormApi';
 import { UserFormFields } from './UserFormFields';
+import { UserFormModal } from './UserFormModal';
 import type { PublicUser, UserFormValues } from './userTypes';
 
 type UserFormProps = {
@@ -34,7 +35,7 @@ export function UserForm({ user, onClose, onSaved }: UserFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4">
+    <UserFormModal>
       <form onSubmit={handleSubmit} className="w-full max-w-[420px] rounded-xl border border-gray-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
         <div className="px-6 pb-2 pt-6">
           <h2 className="text-[16px] font-semibold text-gray-950">{user ? 'Edit user' : 'Add user'}</h2>
@@ -51,6 +52,6 @@ export function UserForm({ user, onClose, onSaved }: UserFormProps) {
           <button type="submit" disabled={saving} className="btn-primary h-9 rounded-lg px-3.5 text-[13px]">{saving ? 'Saving...' : 'Save'}</button>
         </div>
       </form>
-    </div>
+    </UserFormModal>
   );
 }
