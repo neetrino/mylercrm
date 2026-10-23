@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -13,11 +13,17 @@ import {
   Layers,
   SquarePen,
   X,
+  LayoutGrid,
+  List as ListIcon,
+  Building2,
 } from 'lucide-react';
 import type { Building, District } from '@prisma/client';
 import ApartmentForm from './ApartmentForm';
 import { ApartmentCardItem } from './ApartmentCardItem';
+import { ApartmentsFilters } from './ApartmentsFilters';
+import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 import type { ApartmentListRow } from './apartmentListTypes';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
 import { formatAmd } from '@/lib/formatAmd';
 
 const APARTMENTS_VIEW_MODE_KEY = 'maylercrm:apartmentsViewMode';
@@ -453,44 +459,28 @@ export default function ApartmentsList() {
           </div>
           <div className="flex items-center gap-3">
             {/* View mode toggle */}
-            <div className="flex rounded-lg border border-gray-300 bg-white p-1">
-              <button
+            <div className="inline-flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+              <ViewModeButton
+                active={viewMode === 'grid'}
+                label="Grid view"
                 onClick={() => setViewMode('grid')}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                title="Grid view"
               >
-                <span className="text-base">⊞</span>
-              </button>
-              <button
+                <LayoutGrid className="h-4 w-4" />
+              </ViewModeButton>
+              <ViewModeButton
+                active={viewMode === 'list'}
+                label="List view"
                 onClick={() => setViewMode('list')}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  viewMode === 'list'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                title="List view"
               >
-                <span className="text-base">☰</span>
-              </button>
-              <button
+                <ListIcon className="h-4 w-4" />
+              </ViewModeButton>
+              <ViewModeButton
+                active={viewMode === 'floor'}
+                label="Floor view"
                 onClick={() => setViewMode('floor')}
-                className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  viewMode === 'floor'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                title="Floor view"
               >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="4" y="2" width="16" height="20" rx="1" />
-                  <line x1="4" y1="8" x2="20" y2="8" />
-                  <line x1="4" y1="14" x2="20" y2="14" />
-                </svg>
-              </button>
+                <Building2 className="h-4 w-4" />
+              </ViewModeButton>
             </div>
             {isAdmin && (
               <div className="flex flex-wrap items-center gap-2">
@@ -498,7 +488,7 @@ export default function ApartmentsList() {
                   type="button"
                   onClick={() => void handleExportExcel()}
                   disabled={exportLoading}
-                  className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
                   title="Download all apartments as Excel"
                 >
                   <FileSpreadsheet className="h-4 w-4 shrink-0" />
@@ -507,7 +497,7 @@ export default function ApartmentsList() {
                 <button
                   type="button"
                   onClick={() => setShowForm(true)}
-                  className="btn-primary"
+                  className="btn-primary h-10 rounded-xl shadow-sm"
                 >
                   + Create Apartment
                 </button>
@@ -516,58 +506,15 @@ export default function ApartmentsList() {
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="card flex flex-wrap items-end gap-4 p-4">
-          <div className="w-full min-w-[200px] max-w-md">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Search
-            </label>
-            <input
-              type="search"
-              placeholder="No., building, district, owner..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="input-field"
-              aria-label="Search apartments"
-            />
-          </div>
-          <div className="flex-1 min-w-[200px]">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Building
-            </label>
-            <select
-              value={selectedBuilding || ''}
-              onChange={(e) =>
-                setSelectedBuilding(e.target.value ? parseInt(e.target.value) : null)
-              }
-              className="input-field"
-            >
-              <option value="">All Buildings</option>
-              {buildings.map((building) => (
-                <option key={building.id} value={building.id}>
-                  {building.district.name} - {building.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex-1 min-w-[200px]">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Status
-            </label>
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="input-field"
-            >
-              <option value="">All Statuses</option>
-              <option value="UPCOMING">Upcoming</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="RESERVED">Reserved</option>
-              <option value="SOLD">Sold</option>
-            </select>
-          </div>
-        </div>
+        <ApartmentsFilters
+          searchInput={searchInput}
+          onSearchChange={setSearchInput}
+          buildings={buildings}
+          selectedBuilding={selectedBuilding}
+          onBuildingChange={setSelectedBuilding}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+        />
       </div>
 
       {error && (
@@ -694,17 +641,26 @@ export default function ApartmentsList() {
       )}
 
       {/* Stats */}
-      <div className="mb-4 text-sm text-gray-600">
+      <p className="mb-4 text-sm text-gray-500">
         {allLoaded ? (
-          <>Showing all {apartments.length} apartments</>
+          <>
+            Showing all{' '}
+            <span className="font-medium text-gray-800">{apartments.length}</span>{' '}
+            apartments
+          </>
         ) : (
           <>
-            Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} of{' '}
-            {pagination.total} apartments
+            Showing{' '}
+            <span className="font-medium text-gray-800">
+              {pagination.total === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1}
+              –
+              {Math.min(pagination.page * pagination.limit, pagination.total)}
+            </span>{' '}
+            of <span className="font-medium text-gray-800">{pagination.total}</span>{' '}
+            apartments
           </>
         )}
-      </div>
+      </p>
 
       {/* Empty state */}
       {apartments.length === 0 ? (
@@ -910,16 +866,15 @@ export default function ApartmentsList() {
                         {apt.building.district.name} - {apt.building.name}
                       </td>
                       <td className="whitespace-nowrap px-6 py-2">
-                        <select
+                        <DropdownSelect
                           value={apt.status}
-                          onChange={(e) => handleStatusChange(apt.id, e.target.value)}
-                          className={`select-chevron-list badge border pl-3 py-1.5 font-medium transition-colors ${getStatusColor(apt.status)} cursor-pointer appearance-none bg-right text-xs`}
-                        >
-                          <option value="UPCOMING">Upcoming</option>
-                          <option value="AVAILABLE">Available</option>
-                          <option value="RESERVED">Reserved</option>
-                          <option value="SOLD">Sold</option>
-                        </select>
+                          onChange={(next) => handleStatusChange(apt.id, next)}
+                          options={APARTMENT_STATUS_OPTIONS}
+                          placeholder="Status"
+                          ariaLabel="Apartment status"
+                          fullWidth={false}
+                          triggerClassName={`inline-flex cursor-pointer items-center gap-1 rounded-full border py-1 pl-3 pr-2.5 text-xs font-medium transition-colors ${getStatusColor(apt.status)}`}
+                        />
                       </td>
                       <td className="whitespace-nowrap px-6 py-2 text-sm text-gray-900">
                         {apt.sqm ? `${apt.sqm} m²` : '-'}
@@ -1090,5 +1045,34 @@ export default function ApartmentsList() {
         </div>
       )}
     </div>
+  );
+}
+
+function ViewModeButton({
+  active,
+  label,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  const tone = active
+    ? 'bg-blue-600 text-white shadow-sm'
+    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800';
+
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      aria-pressed={active}
+      onClick={onClick}
+      className={`inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${tone}`}
+    >
+      {children}
+    </button>
   );
 }

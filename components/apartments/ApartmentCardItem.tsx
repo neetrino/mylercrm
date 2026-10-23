@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Eye, Link2, Box } from 'lucide-react';
 import { formatAmd } from '@/lib/formatAmd';
 import { getEmbedPreviewUrl } from '@/lib/getEmbedPreviewUrl';
+import { DropdownSelect } from '@/components/ui/DropdownSelect';
+import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 import type { ApartmentListRow } from './apartmentListTypes';
 
 export type ApartmentCardItemProps = {
@@ -27,6 +29,7 @@ export const ApartmentCardItem = memo(
     const router = useRouter();
     const [landingCopying, setLandingCopying] = useState(false);
     const [landingJustCopied, setLandingJustCopied] = useState(false);
+    const [statusMenuOpen, setStatusMenuOpen] = useState(false);
     const matterUrl = apt.matter_link ?? apt.matterLink ?? null;
     const embedUrl = matterUrl ? getEmbedPreviewUrl(matterUrl) : null;
 
@@ -75,7 +78,7 @@ export const ApartmentCardItem = memo(
             router.push(`/apartments/${apt.id}`);
           }
         }}
-        className="group relative cursor-pointer overflow-hidden rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-lg"
+        className={`group relative cursor-pointer rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-lg ${statusMenuOpen ? 'z-30' : ''}`}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -86,20 +89,19 @@ export const ApartmentCardItem = memo(
               {apt.building.district.name} — {apt.building.name}
             </p>
           </div>
-          <select
-            data-no-nav
-            value={apt.status}
-            onChange={(e) => {
-              e.stopPropagation();
-              onStatusChange(apt.id, e.target.value);
-            }}
-            className={`select-chevron-grid shrink-0 cursor-pointer appearance-none rounded-full border px-2.5 py-1 pr-6 text-xs font-medium transition-colors ${getStatusColor(apt.status)}`}
-          >
-            <option value="UPCOMING">Upcoming</option>
-            <option value="AVAILABLE">Available</option>
-            <option value="RESERVED">Reserved</option>
-            <option value="SOLD">Sold</option>
-          </select>
+          <div data-no-nav className="shrink-0">
+            <DropdownSelect
+              value={apt.status}
+              onChange={(next) => onStatusChange(apt.id, next)}
+              options={APARTMENT_STATUS_OPTIONS}
+              placeholder="Status"
+              ariaLabel="Apartment status"
+              align="end"
+              fullWidth={false}
+              onOpenChange={setStatusMenuOpen}
+              triggerClassName={`inline-flex cursor-pointer items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${getStatusColor(apt.status)}`}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm">
