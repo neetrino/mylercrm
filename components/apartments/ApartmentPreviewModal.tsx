@@ -1,5 +1,7 @@
 'use client';
 
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
+
 type ApartmentPreviewModalProps = {
   previewUrl: string | null;
   setPreviewUrl: (url: string | null) => void;
@@ -9,6 +11,11 @@ type ApartmentPreviewModalProps = {
 
 export function ApartmentPreviewModal(props: ApartmentPreviewModalProps) {
   const { previewUrl, setPreviewUrl, previewOriginalUrl, setPreviewOriginalUrl } = props;
+  const closePreview = () => {
+    setPreviewUrl(null);
+    setPreviewOriginalUrl(null);
+  };
+  useCloseOnEscape(closePreview, Boolean(previewUrl));
   return (
     <>
       {/* 3D preview modal (iframe) */}

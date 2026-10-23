@@ -7,6 +7,7 @@ import type { District } from '@prisma/client';
 import { BuildingFloorPlans } from './BuildingFloorPlans';
 import type { BuildingWithDistrict } from './buildingFormTypes';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 type BuildingFormProps = {
   building: BuildingWithDistrict | null;
@@ -63,6 +64,7 @@ export default function BuildingForm({
       setFullBuilding(null);
     }
   }, [building, districts]);
+  useCloseOnEscape(handleClose, !standalone);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

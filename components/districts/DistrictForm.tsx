@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import type { District } from '@prisma/client';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 interface DistrictFormProps {
   district: District | null;
@@ -18,6 +19,7 @@ export default function DistrictForm({
   const [slug, setSlug] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  useCloseOnEscape(onClose);
 
   useEffect(() => {
     if (district) {

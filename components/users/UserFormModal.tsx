@@ -2,12 +2,15 @@
 
 import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 type UserFormModalProps = {
   children: ReactNode;
+  onClose: () => void;
 };
 
-export function UserFormModal({ children }: UserFormModalProps) {
+export function UserFormModal({ children, onClose }: UserFormModalProps) {
+  useCloseOnEscape(onClose);
   useEffect(() => {
     document.documentElement.classList.add('overflow-hidden');
     return () => {

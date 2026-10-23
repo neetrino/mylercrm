@@ -32,7 +32,7 @@ export function UserFormFields({ user, values, setValues }: UserFormFieldsProps)
         value={values.password}
         onChange={(event) => setValues({ ...values, password: event.target.value })}
         className="input-field mb-3"
-        placeholder={user ? 'Leave blank to keep current' : 'At least 8 characters'}
+        placeholder={user ? 'Leave blank to keep current' : '********'}
       />
       <label className="mb-1.5 block text-[13px] font-medium text-gray-700">Role</label>
       <div className="mb-4">

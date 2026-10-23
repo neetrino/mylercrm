@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCloseOnEscape } from './useCloseOnEscape';
 
 export type MenuAlign = 'start' | 'end';
 
@@ -67,6 +68,8 @@ export function useDismissOnOutside(
 ) {
   const onCloseRef = useRef(onClose);
 
+  useCloseOnEscape(onClose, open);
+
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
@@ -79,14 +82,9 @@ export function useDismissOnOutside(
       if (menuRef.current?.contains(target)) return;
       onCloseRef.current();
     };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCloseRef.current();
-    };
     document.addEventListener('click', onPointer);
-    document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('click', onPointer);
-      document.removeEventListener('keydown', onKey);
     };
   }, [open, rootRef, menuRef]);
 }

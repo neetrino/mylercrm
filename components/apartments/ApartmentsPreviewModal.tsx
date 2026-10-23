@@ -1,5 +1,7 @@
 'use client';
 
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
+
 type ApartmentsPreviewModalProps = {
   previewModalUrl: string | null;
   setPreviewModalUrl: (url: string | null) => void;
@@ -7,6 +9,7 @@ type ApartmentsPreviewModalProps = {
 
 export function ApartmentsPreviewModal(props: ApartmentsPreviewModalProps) {
   const { previewModalUrl, setPreviewModalUrl } = props;
+  useCloseOnEscape(() => setPreviewModalUrl(null), Boolean(previewModalUrl));
   return (
     <>
       {/* 3D Preview modal */}

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { DashboardSidebar } from './DashboardSidebar';
 import { DashboardTopBar } from './DashboardTopBar';
 import type { SidebarNavItem } from './SidebarNav';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 
 const DESKTOP_NAV_MIN_PX = 1024;
 
@@ -51,19 +52,16 @@ function useMobileNav(pathname: string) {
     setOpen(false);
   }, [pathname]);
 
+  useCloseOnEscape(() => setOpen(false), open);
+
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
     const onResize = () => {
       if (window.innerWidth >= DESKTOP_NAV_MIN_PX) setOpen(false);
     };
-    document.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
     document.documentElement.classList.add('overflow-hidden');
     return () => {
-      document.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', onResize);
       document.documentElement.classList.remove('overflow-hidden');
     };

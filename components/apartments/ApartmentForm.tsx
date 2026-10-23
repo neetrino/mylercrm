@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Building, District } from '@prisma/client';
 import { DropdownSelect } from '@/components/ui/DropdownSelect';
+import { useCloseOnEscape } from '@/components/ui/useCloseOnEscape';
 import { APARTMENT_STATUS_OPTIONS } from './apartmentStatusOptions';
 
 type BuildingWithDistrict = Building & {
@@ -34,6 +35,7 @@ export default function ApartmentForm({
   const [aptNameEditedManually, setAptNameEditedManually] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  useCloseOnEscape(onClose);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -35,7 +35,7 @@ export function UserForm({ user, onClose, onSaved }: UserFormProps) {
   };
 
   return (
-    <UserFormModal>
+    <UserFormModal onClose={onClose}>
       <form onSubmit={handleSubmit} className="w-full max-w-[420px] rounded-xl border border-gray-200 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
         <div className="px-6 pb-2 pt-6">
           <h2 className="text-[16px] font-semibold text-gray-950">{user ? 'Edit user' : 'Add user'}</h2>
